@@ -1,6 +1,7 @@
 // server.js
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors'); 
 const app = express();
 require('dotenv').config();
 const dbConfig = require('./config/db');
@@ -34,7 +35,7 @@ cloudinary.config({
 
 
 
-
+app.use(cors()); 
 app.use('/api/college', collegeRoute);
 app.use('/api/company', companyRoute);
 app.use('/api/chat', chatRoute);
