@@ -8,8 +8,7 @@ const CollegeDetail = require("../models/collegeDetailModel");
 const Token = require("../models/token.js");
 const sendEmail = require("../utils/sendEmail.js");
 const crypto = require("crypto");
-
-
+const cloudinary = require("cloudinary");
 
 router.post("/register", async (req, res) => {
     try {
