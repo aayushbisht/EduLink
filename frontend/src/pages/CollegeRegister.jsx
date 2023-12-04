@@ -43,7 +43,7 @@ const CollegeRegister = () => {
     e.preventDefault();
     try {
       const values = {collegeName, collegeType, contactPerson, email, password, phone , avatar};
-      const response = await axios.post("/api/college/register", values);
+      const response = await axios.post("https://edulink-backend.onrender.com/api/college/register", values);
       if (response.data.success) {
         toast.success(response.data.message);
         setVerificationSent(true);
