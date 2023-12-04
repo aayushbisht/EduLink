@@ -52,6 +52,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://edulink-backend.onrender.com:10000"
+  "proxy": "https://edulink-backend.onrender.com"
   
 }
