@@ -48,7 +48,7 @@ const CollegeRegister = () => {
         avatar,
       };
       const response = await axios.post(
-        "https://edulink-backend.onrender.comhttps://edulink-backend.onrender.com/api/college/register",
+        "https://edulink-backend.onrender.com/api/college/register",
         values
       );
       if (response.data.success) {
