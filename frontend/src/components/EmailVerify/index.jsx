@@ -8,12 +8,12 @@ const EmailVerify = () => {
   const [validUrl, setValidUrl] = useState(true);
   const [countdown, setCountdown] = useState(5);
   const param = useParams();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyEmailUrl = async () => {
       try {
-        const url = `/api/college/${param.id}/verify/${param.token}`;
+        const url = `https://edulink-backend.onrender.com/api/college/${param.id}/verify/${param.token}`;
         const { data } = await axios.get(url);
         console.log("this is");
         console.log(data);

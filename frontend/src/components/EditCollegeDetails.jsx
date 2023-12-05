@@ -1,65 +1,57 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import TagsInput from 'react-tagsinput';
-import 'react-tagsinput/react-tagsinput.css'
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
 
-const EditCollegeDetails = ({closeModal,existingData}) => {
-    
+const EditCollegeDetails = ({ closeModal, existingData }) => {
   const token = localStorage.getItem("collegetoken");
-  
 
   const [formData, setFormData] = useState({
-   ...existingData,
-   domains: existingData.domains || [],
-   companiesvisited: existingData.companiesvisited || [],
-   
-
+    ...existingData,
+    domains: existingData.domains || [],
+    companiesvisited: existingData.companiesvisited || [],
   });
 
   const handleFormSubmit = async (e) => {
-    e.preventDefault(); 
-   
+    e.preventDefault();
 
+    try {
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/college/updatedetails",
+        {
+          token,
+          about: formData.about,
+          moto: formData.moto,
+          employees: formData.employees,
+          ethics: formData.ethics,
+          domains: formData.domains,
+          location: formData.location,
+          studentsplaced: formData.studentsplaced,
+          naacranking: formData.naacranking,
+          maxpackage: formData.maxpackage,
+          averagepackage: formData.averagepackage,
+          alumninetwork: formData.alumninetwork,
+          foreigntieups: formData.foreigntieups,
+          researchpapers: formData.researchpapers,
+          internshipoffered: formData.internshipoffered,
+          companiesvisited: formData.companiesvisited,
+        }
+      );
 
-  try {
-    
-    const response = await axios.post("/api/college/updatedetails", {
-      token,
-      about: formData.about,
-      moto: formData.moto,
-      employees: formData.employees,
-      ethics: formData.ethics,
-      domains: formData.domains,
-      location: formData.location,
-      studentsplaced: formData.studentsplaced,
-      naacranking: formData.naacranking,
-      maxpackage: formData.maxpackage,
-      averagepackage: formData.averagepackage,
-      alumninetwork: formData.alumninetwork,
-      foreigntieups: formData.foreigntieups,
-      researchpapers: formData.researchpapers,
-      internshipoffered: formData.internshipoffered,
-      companiesvisited: formData.companiesvisited,
-      
-
-    });
-
-    if (response.data.success) { 
+      if (response.data.success) {
+        window.location.reload();
+        toast.success(response.data.message);
+        setFormData({ ...response.data.data });
+      } else {
+        window.location.reload();
+        toast.error(response.data.message);
+      }
+    } catch (error) {
       window.location.reload();
-      toast.success(response.data.message);
-      setFormData({...response.data.data});
-    } else {
-      window.location.reload();
-      toast.error(response.data.message);
+      toast.error("An error occurred while updating the details");
     }
-  } catch (error) {
-    window.location.reload();
-    toast.error("An error occurred while updating the details");
-    
   };
-
-}
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -70,11 +62,8 @@ const EditCollegeDetails = ({closeModal,existingData}) => {
     setFormData((prevData) => ({ ...prevData, domains: tags }));
   };
   const handleCompaniesChange = (companys) => {
-    setFormData((prevData) => ({ ...prevData, companiesvisited : companys }));
+    setFormData((prevData) => ({ ...prevData, companiesvisited: companys }));
   };
-
-  
-  
 
   return (
     <div>
@@ -132,13 +121,25 @@ const EditCollegeDetails = ({closeModal,existingData}) => {
         </div>
         <div className="form-group my-3">
           <label htmlFor="domains">Tech Domains:</label>
-          <TagsInput value={formData.domains} onChange={handleTagsChange} required/>
+          <TagsInput
+            value={formData.domains}
+            onChange={handleTagsChange}
+            required
+          />
         </div>
         <div className="form-group my-3">
           <label htmlFor="location">Company's Location:</label>
-          <input className="form-control" type="text" name="location" id="location" value={formData.location} onChange={handleInputChange} required/>
+          <input
+            className="form-control"
+            type="text"
+            name="location"
+            id="location"
+            value={formData.location}
+            onChange={handleInputChange}
+            required
+          />
         </div>
-        
+
         <div className="form-group my-3">
           <label htmlFor="studentsplaced">Student Placed:</label>
           <input
@@ -163,8 +164,6 @@ const EditCollegeDetails = ({closeModal,existingData}) => {
             required
           />
         </div>
-
-
 
         <div className="form-group my-3">
           <label htmlFor="maxpackage">Max Package:</label>
@@ -244,17 +243,17 @@ const EditCollegeDetails = ({closeModal,existingData}) => {
 
         <div className="form-group my-3">
           <label htmlFor="companiesvisited">Companies Visited:</label>
-          <TagsInput value={formData.companiesvisited} onChange={handleCompaniesChange} required/>
+          <TagsInput
+            value={formData.companiesvisited}
+            onChange={handleCompaniesChange}
+            required
+          />
         </div>
 
-        
-
-       <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary">
           Submit
         </button>
       </form>
-
-      
     </div>
   );
 };

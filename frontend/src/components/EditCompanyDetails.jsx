@@ -1,63 +1,60 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import TagsInput from 'react-tagsinput';
-import 'react-tagsinput/react-tagsinput.css';
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
 import { FaTrash } from "react-icons/fa";
 
-const EditCompanyDetails = ({closeModal,existingData}) => {
-    
+const EditCompanyDetails = ({ closeModal, existingData }) => {
   const token = localStorage.getItem("companytoken");
-  
 
   const [formData, setFormData] = useState({
-   ...existingData,
-   domains: existingData.domains || [],
-   successstories: existingData.successstories || [],
-   studentdomain: existingData.studentdomain || ["Details Will be Updated Soon"],
-   industrypartnership: existingData.industrypartnership || [],
+    ...existingData,
+    domains: existingData.domains || [],
+    successstories: existingData.successstories || [],
+    studentdomain: existingData.studentdomain || [
+      "Details Will be Updated Soon",
+    ],
+    industrypartnership: existingData.industrypartnership || [],
   });
   const [isAddingStory, setIsAddingStory] = useState(false);
   const [newStory, setNewStory] = useState("");
 
-
   const handleFormSubmit = async (e) => {
-    e.preventDefault(); 
-   
+    e.preventDefault();
 
+    try {
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/updatedetails",
+        {
+          token,
+          about: formData.about,
+          moto: formData.moto,
+          employees: formData.employees,
+          ethics: formData.ethics,
+          domains: formData.domains,
+          location: formData.location,
+          studentdomain: formData.studentdomain,
+          hiringperiod: formData.hiringperiod,
+          successstories: formData.successstories,
+          industrypartnership: formData.industrypartnership,
+          workculture: formData.workculture,
+        }
+      );
 
-  try {
-    
-    const response = await axios.post("/api/company/updatedetails", {
-      token,
-      about: formData.about,
-      moto: formData.moto,
-      employees: formData.employees,
-      ethics: formData.ethics,
-      domains: formData.domains,
-      location: formData.location,
-      studentdomain: formData.studentdomain,
-      hiringperiod: formData.hiringperiod,
-      successstories: formData.successstories,
-      industrypartnership: formData.industrypartnership,
-      workculture: formData.workculture,
-    });
-
-    if (response.data.success) { 
+      if (response.data.success) {
+        window.location.reload();
+        toast.success(response.data.message);
+        setFormData({ ...response.data.data });
+      } else {
+        window.location.reload();
+        toast.error(response.data.message);
+      }
+    } catch (error) {
       window.location.reload();
-      toast.success(response.data.message);
-      setFormData({...response.data.data});
-    } else {
-      window.location.reload();
-      toast.error(response.data.message);
+      toast.error("An error occurred while updating the details");
     }
-  } catch (error) {
-    window.location.reload();
-    toast.error("An error occurred while updating the details");
-    
   };
-
-}
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -70,10 +67,9 @@ const EditCompanyDetails = ({closeModal,existingData}) => {
     setFormData((prevData) => ({ ...prevData, studentdomain: dom }));
   };
   const handleindustryChange = (Industry) => {
-    setFormData((prevData) => ({ ...prevData, industrypartnership: Industry}));
+    setFormData((prevData) => ({ ...prevData, industrypartnership: Industry }));
   };
 
-  
   const handleAddStory = () => {
     setIsAddingStory(true);
   };
@@ -100,8 +96,6 @@ const EditCompanyDetails = ({closeModal,existingData}) => {
       successstories: prevData.successstories.filter((_, i) => i !== index),
     }));
   };
-  
-  
 
   return (
     <div>
@@ -159,16 +153,32 @@ const EditCompanyDetails = ({closeModal,existingData}) => {
         </div>
         <div className="form-group my-3">
           <label htmlFor="domains">Tech Domains:</label>
-          <TagsInput value={formData.domains} onChange={handleTagsChange} required/>
+          <TagsInput
+            value={formData.domains}
+            onChange={handleTagsChange}
+            required
+          />
         </div>
         <div className="form-group my-3">
           <label htmlFor="location">Company's Location:</label>
-          <input className="form-control" type="text" name="location" id="location" value={formData.location} onChange={handleInputChange} required/>
+          <input
+            className="form-control"
+            type="text"
+            name="location"
+            id="location"
+            value={formData.location}
+            onChange={handleInputChange}
+            required
+          />
         </div>
-        
+
         <div className="form-group my-3">
           <label htmlFor="studentdomain">Student Domains:</label>
-          <TagsInput value={formData.studentdomain} onChange={handledomainsChange} required/>
+          <TagsInput
+            value={formData.studentdomain}
+            onChange={handledomainsChange}
+            required
+          />
         </div>
         <div className="form-group my-3">
           <label htmlFor="hiringperiod">Hiring Period:</label>
@@ -183,52 +193,131 @@ const EditCompanyDetails = ({closeModal,existingData}) => {
           />
         </div>
 
-
-
-        <div className="form-group my-3" style={{ border: "1px solid #ccc", padding: "15px", borderRadius: "5px", backgroundColor: "#f7f7f7" }}>
-  <label htmlFor="successstories" style={{ fontWeight: "bold", fontSize: "18px", display: "block", marginBottom: "10px" }}>Success Stories:</label>
-  <ul style={{ listStyle: "none", padding: "0" }}>
-    {formData.successstories.map((story, index) => (
-      <li key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px", border: "1px solid #ccc", borderRadius: "5px", padding: "10px", backgroundColor: "#fff" }}>
-        <span style={{ flex: "1", fontSize: "16px" }}>{story}</span>
-        <button style={{ backgroundColor: "#f44336", color: "#fff", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", fontSize: "16px" }} onClick={() => handleDeleteStory(index)}>
-        
-        <FaTrash />
-          
-        </button>
-      </li>
-    ))}
-    {isAddingStory ? (
-      <li className="success-item">
-        <input
-          type="text"
-          className="form-control story-input"
-          style={{ width: "100%", padding: "5px", border: "1px solid #ccc", borderRadius: "5px", fontSize: "16px" }}
-          placeholder="New Story"
-          value={newStory}
-          onChange={(e) => setNewStory(e.target.value)}
-        />
-        <button style={{ backgroundColor: "#4CAF50", color: "#fff", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", fontSize: "16px" }} onClick={handleSaveStory}>Save</button>
-        <button style={{ backgroundColor: "#ccc", color: "#fff", border: "none", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", fontSize: "16px" }} onClick={handleCancelAddStory}>Cancel</button>
-      </li>
-    ) : (
-      <li>
-        <span
-          className="add-story-button"
-          style={{ backgroundColor: "#2196F3", color: "#fff", padding: "5px 10px", borderRadius: "5px", cursor: "pointer", fontSize: "18px" }}
-          onClick={handleAddStory}
+        <div
+          className="form-group my-3"
+          style={{
+            border: "1px solid #ccc",
+            padding: "15px",
+            borderRadius: "5px",
+            backgroundColor: "#f7f7f7",
+          }}
         >
-          + Add Story
-        </span>
-      </li>
-    )}
-  </ul>
-</div>
+          <label
+            htmlFor="successstories"
+            style={{
+              fontWeight: "bold",
+              fontSize: "18px",
+              display: "block",
+              marginBottom: "10px",
+            }}
+          >
+            Success Stories:
+          </label>
+          <ul style={{ listStyle: "none", padding: "0" }}>
+            {formData.successstories.map((story, index) => (
+              <li
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "10px",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  padding: "10px",
+                  backgroundColor: "#fff",
+                }}
+              >
+                <span style={{ flex: "1", fontSize: "16px" }}>{story}</span>
+                <button
+                  style={{
+                    backgroundColor: "#f44336",
+                    color: "#fff",
+                    border: "none",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                  onClick={() => handleDeleteStory(index)}
+                >
+                  <FaTrash />
+                </button>
+              </li>
+            ))}
+            {isAddingStory ? (
+              <li className="success-item">
+                <input
+                  type="text"
+                  className="form-control story-input"
+                  style={{
+                    width: "100%",
+                    padding: "5px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    fontSize: "16px",
+                  }}
+                  placeholder="New Story"
+                  value={newStory}
+                  onChange={(e) => setNewStory(e.target.value)}
+                />
+                <button
+                  style={{
+                    backgroundColor: "#4CAF50",
+                    color: "#fff",
+                    border: "none",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                  onClick={handleSaveStory}
+                >
+                  Save
+                </button>
+                <button
+                  style={{
+                    backgroundColor: "#ccc",
+                    color: "#fff",
+                    border: "none",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                  onClick={handleCancelAddStory}
+                >
+                  Cancel
+                </button>
+              </li>
+            ) : (
+              <li>
+                <span
+                  className="add-story-button"
+                  style={{
+                    backgroundColor: "#2196F3",
+                    color: "#fff",
+                    padding: "5px 10px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontSize: "18px",
+                  }}
+                  onClick={handleAddStory}
+                >
+                  + Add Story
+                </span>
+              </li>
+            )}
+          </ul>
+        </div>
 
-
-      <div className="form-group my-3">
+        <div className="form-group my-3">
           <label htmlFor="industrypartnership">Industry Partnership:</label>
-          <TagsInput value={formData.industrypartnership} onChange={handleindustryChange} required/>
+          <TagsInput
+            value={formData.industrypartnership}
+            onChange={handleindustryChange}
+            required
+          />
         </div>
         <div className="form-group my-3">
           <label htmlFor="workculture">Work Culture:</label>
@@ -243,12 +332,10 @@ const EditCompanyDetails = ({closeModal,existingData}) => {
           />
         </div>
 
-       <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary">
           Submit
         </button>
       </form>
-
-      
     </div>
   );
 };

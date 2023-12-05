@@ -7,7 +7,6 @@ import Chat from "./Chat";
 import { FaSearch } from "react-icons/fa";
 import "./search.css";
 
-
 const CollegeList = () => {
   const [collegeDataList, setCollegeDataList] = useState([]);
   const [socket, setSocket] = useState(null);
@@ -21,7 +20,9 @@ const CollegeList = () => {
 
   const getCollegeData = async () => {
     try {
-      const response = await axios.post("/api/company/getcollegedata");
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/getcollegedata"
+      );
       setCollegeDataList(response.data.data);
     } catch (error) {
       console.error(error);
@@ -56,13 +57,11 @@ const CollegeList = () => {
   return (
     <div className="container" style={{ width: "80%" }}>
       <div className="row">
-        
         <div
           className="col-md-6"
           style={{ overflowY: "auto", maxHeight: "70vh" }}
         >
-
-    <div class="d-flex justify-content-center px-5 mb-4 mt-3 ">
+          <div class="d-flex justify-content-center px-5 mb-4 mt-3 ">
             <div class="search" style={{ marginRight: "100px" }}>
               <input
                 type="text"
@@ -78,7 +77,7 @@ const CollegeList = () => {
               </a>
             </div>
           </div>
-          
+
           {filteredCompanyData.map((collegeData) => (
             <CollegeCard
               key={collegeData._id}
@@ -96,8 +95,7 @@ const CollegeList = () => {
                 background: "linear-gradient(to right, #b7d8e8, #c7e9f4)",
               }}
             >
-
-<div class="row">
+              <div class="row">
                 <div class="col-3 ">
                   <div class="row justify-content-end">
                     <div class="col-xl-11 col-sm-12 col-12">
@@ -168,7 +166,6 @@ const CollegeList = () => {
                     className=" rounded-5 border-start bg-primary bg-opacity-10 bg-gradient fs-7 py-4 px-3 text-primary-emphasis "
                     style={{ fontFamily: "'Roboto', sans-serif" }}
                   >
-                 
                     <div
                       className="card mb-4  rounded-5"
                       style={{ width: "50%", margin: "0 auto" }}
@@ -185,23 +182,35 @@ const CollegeList = () => {
                       </div>
                     </div>
 
-                    <p>{expanded ? selectedCollege.collegeDetail.about : selectedCollege.collegeDetail.about.slice(0, 250)+"..."} {selectedCollege.collegeDetail.about.length > 200 && (
-            <a
-              type="button"
-              onClick={toggleCollapse}
-            >
-              {expanded ? <i class="bi bi-caret-up-fill"></i> : <i class="bi bi-caret-down-fill"></i>}
-            </a>
-          )}</p>
-          
-          {expanded && (
-            <div className="collapse" id="collapseabout">
-              {selectedCollege.collegeDetail.about}
-            </div>
-          )}
+                    <p>
+                      {expanded
+                        ? selectedCollege.collegeDetail.about
+                        : selectedCollege.collegeDetail.about.slice(0, 250) +
+                          "..."}{" "}
+                      {selectedCollege.collegeDetail.about.length > 200 && (
+                        <a type="button" onClick={toggleCollapse}>
+                          {expanded ? (
+                            <i class="bi bi-caret-up-fill"></i>
+                          ) : (
+                            <i class="bi bi-caret-down-fill"></i>
+                          )}
+                        </a>
+                      )}
+                    </p>
+
+                    {expanded && (
+                      <div className="collapse" id="collapseabout">
+                        {selectedCollege.collegeDetail.about}
+                      </div>
+                    )}
                     {selectedCollege && (
-            <Chat userType="company" loggedInUserId={localStorage.getItem('companytoken')}  userId={selectedCollege._id} socket={socket} />
-          )}
+                      <Chat
+                        userType="company"
+                        loggedInUserId={localStorage.getItem("companytoken")}
+                        userId={selectedCollege._id}
+                        socket={socket}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
@@ -219,7 +228,6 @@ const CollegeList = () => {
               </div>
             </div>
           )}
-          
         </div>
       </div>
     </div>

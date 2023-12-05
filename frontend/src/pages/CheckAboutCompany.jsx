@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useParams,useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,16 +18,21 @@ const CheckAboutCompany = () => {
   const [company, setCompany] = useState({});
   const findDetail = async () => {
     try {
-      
       const token = params.companyId;
 
-      const response = await axios.post("/api/company/getcompanydetail", {
-        token,
-      });
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/getcompanydetail",
+        {
+          token,
+        }
+      );
       const companyData = response.data.data;
       setData(companyData);
       console.log(companyData);
-      const data = await axios.post("/api/company/findcompany", { token });
+      const data = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/findcompany",
+        { token }
+      );
       const companyNam = data.data.data;
       setCompany(companyNam);
       setIsLoading(false);
@@ -40,7 +45,6 @@ const CheckAboutCompany = () => {
     findDetail();
   }, []);
   return (
-    
     <div
       className="my-5 container-md text-center"
       style={{ width: "70%", marginTop: "30px" }}
@@ -51,7 +55,6 @@ const CheckAboutCompany = () => {
         </div>
       ) : (
         <div class="row">
-  
           {companyId && (
             <p className=" display-1 font-weight-bold text-capitalize">
               {company.companyName}
@@ -68,15 +71,15 @@ const CheckAboutCompany = () => {
           <div class="col-3 ">
             <div class="row justify-content-end">
               <div class="col-xl-9 col-sm-12 col-12">
-              {companyId && (
-                    <button
+                {companyId && (
+                  <button
                     onClick={() => navigate(-1)}
                     className="btn btn-primary mb-3 rounded-2"
                     style={{ position: "absolute", top: 10, left: 10 }}
                   >
                     Back
                   </button>
-          )}
+                )}
 
                 <div class="card">
                   <div class="card-content">
@@ -212,38 +215,44 @@ const CheckAboutCompany = () => {
               style={{ width: "94%", padding: "20px", borderRadius: "10px" }}
             >
               <div className="container text-center">
-  <div className="d-flex flex-column align-items-center">
-    {data.industrypartnership.length === 0 ? (
-      <p style={{ color: "white", fontStyle: "italic" }}>Not available yet</p>
-    ) : (
-      <div>
-        <Marquee style={{ width: "100%" }}>
-          {data.industrypartnership.map((item, index) => (
-            <div className="card2" key={index}>
-              <h5 className="text-white" style={{ fontStyle: "italic" }}>
-                {item}
-              </h5>
-            </div>
-          ))}
-        </Marquee>
-        <Marquee
-          direction="right"
-          style={{ width: "100%", marginTop: "25px" }}
-        >
-          {data.industrypartnership.map((item, index) => (
-            <div className="card2" key={index}>
-              <h5 className="text-white" style={{ fontStyle: "italic" }}>
-                {item}
-              </h5>
-            </div>
-          ))}
-        </Marquee>
-      </div>
-    )}
-  </div>
-</div>
-
-              
+                <div className="d-flex flex-column align-items-center">
+                  {data.industrypartnership.length === 0 ? (
+                    <p style={{ color: "white", fontStyle: "italic" }}>
+                      Not available yet
+                    </p>
+                  ) : (
+                    <div>
+                      <Marquee style={{ width: "100%" }}>
+                        {data.industrypartnership.map((item, index) => (
+                          <div className="card2" key={index}>
+                            <h5
+                              className="text-white"
+                              style={{ fontStyle: "italic" }}
+                            >
+                              {item}
+                            </h5>
+                          </div>
+                        ))}
+                      </Marquee>
+                      <Marquee
+                        direction="right"
+                        style={{ width: "100%", marginTop: "25px" }}
+                      >
+                        {data.industrypartnership.map((item, index) => (
+                          <div className="card2" key={index}>
+                            <h5
+                              className="text-white"
+                              style={{ fontStyle: "italic" }}
+                            >
+                              {item}
+                            </h5>
+                          </div>
+                        ))}
+                      </Marquee>
+                    </div>
+                  )}
+                </div>
+              </div>
             </section>
           </div>
 
@@ -263,35 +272,48 @@ const CheckAboutCompany = () => {
             </h1>
           </div>
           {data.successstories.length === 0 ? (
-   <p style={{ fontStyle: "italic", fontSize: "24px", color: "gray", margin: "20px" }}>
-   Nothing to display yet
- </p>
-) : (
-  <div className="horizontal-scroll-carousel align-items-end justify-content-end d-flex">
-    <Marquee className="rounded-2" pauseOnHover="true" style={{ width: "95%" }}>
-      {data.successstories.map((item, index) => (
-        <div className="card m-2 rounded-3" key={index} style={{ width: "18rem", background: "rgba(225, 225, 225, 0.1)" }}>
-          <div className="card-body">
-            <p className="text-danger text-bold-500">
-              <i>"</i>
-              <em>{item}</em>
-              <i>"</i>
+            <p
+              style={{
+                fontStyle: "italic",
+                fontSize: "24px",
+                color: "gray",
+                margin: "20px",
+              }}
+            >
+              Nothing to display yet
             </p>
-          </div>
-        </div>
-      ))}
-    </Marquee>
-  </div>
-)}
-
-
-
-
-          
+          ) : (
+            <div className="horizontal-scroll-carousel align-items-end justify-content-end d-flex">
+              <Marquee
+                className="rounded-2"
+                pauseOnHover="true"
+                style={{ width: "95%" }}
+              >
+                {data.successstories.map((item, index) => (
+                  <div
+                    className="card m-2 rounded-3"
+                    key={index}
+                    style={{
+                      width: "18rem",
+                      background: "rgba(225, 225, 225, 0.1)",
+                    }}
+                  >
+                    <div className="card-body">
+                      <p className="text-danger text-bold-500">
+                        <i>"</i>
+                        <em>{item}</em>
+                        <i>"</i>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </Marquee>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
-}
+};
 
 export default CheckAboutCompany;

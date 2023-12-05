@@ -10,28 +10,39 @@ import "swiper/css/free-mode";
 import "swiper/css/scrollbar";
 import "./about.css";
 import { FreeMode, Scrollbar, Mousewheel } from "swiper/modules";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 function About() {
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const { companyId } = useParams();
   const [company, setCompany] = useState({});
-  const items = ["We had a very great experince with some of our lcient", "Company 2", "Company 3", "Company 4"];
+  const items = [
+    "We had a very great experince with some of our lcient",
+    "Company 2",
+    "Company 3",
+    "Company 4",
+  ];
 
   const findDetail = async () => {
     try {
       // const token = localStorage.getItem("companytoken");
       const token = companyId || localStorage.getItem("companytoken");
 
-      const response = await axios.post("/api/company/getcompanydetail", {
-        token,
-      });
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/getcompanydetail",
+        {
+          token,
+        }
+      );
       const companyData = response.data.data;
       setData(companyData);
       console.log(companyData);
-      const data = await axios.post("/api/company/findcompany", { token });
+      const data = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/findcompany",
+        { token }
+      );
       const companyNam = data.data.data;
       console.log(data);
       setCompany(companyNam);
@@ -172,11 +183,10 @@ function About() {
             <div className="form-group my-3 d-flex justify-content-end">
               <button
                 type="button "
-
                 className="btn btn-primary rounded-2"
                 onClick={handleOpenModal}
               >
-               <FontAwesomeIcon icon={faEdit}/>
+                <FontAwesomeIcon icon={faEdit} />
               </button>
             </div>
             {showModal && (
@@ -282,38 +292,44 @@ function About() {
               style={{ width: "94%", padding: "20px", borderRadius: "10px" }}
             >
               <div className="container text-center">
-  <div className="d-flex flex-column align-items-center">
-    {data.industrypartnership.length === 0 ? (
-      <p style={{ color: "white", fontStyle: "italic" }}>Not available yet</p>
-    ) : (
-      <div>
-        <Marquee style={{ width: "100%" }}>
-          {data.industrypartnership.map((item, index) => (
-            <div className="card2" key={index}>
-              <h5 className="text-white" style={{ fontStyle: "italic" }}>
-                {item}
-              </h5>
-            </div>
-          ))}
-        </Marquee>
-        <Marquee
-          direction="right"
-          style={{ width: "100%", marginTop: "25px" }}
-        >
-          {data.industrypartnership.map((item, index) => (
-            <div className="card2" key={index}>
-              <h5 className="text-white" style={{ fontStyle: "italic" }}>
-                {item}
-              </h5>
-            </div>
-          ))}
-        </Marquee>
-      </div>
-    )}
-  </div>
-</div>
-
-              
+                <div className="d-flex flex-column align-items-center">
+                  {data.industrypartnership.length === 0 ? (
+                    <p style={{ color: "white", fontStyle: "italic" }}>
+                      Not available yet
+                    </p>
+                  ) : (
+                    <div>
+                      <Marquee style={{ width: "100%" }}>
+                        {data.industrypartnership.map((item, index) => (
+                          <div className="card2" key={index}>
+                            <h5
+                              className="text-white"
+                              style={{ fontStyle: "italic" }}
+                            >
+                              {item}
+                            </h5>
+                          </div>
+                        ))}
+                      </Marquee>
+                      <Marquee
+                        direction="right"
+                        style={{ width: "100%", marginTop: "25px" }}
+                      >
+                        {data.industrypartnership.map((item, index) => (
+                          <div className="card2" key={index}>
+                            <h5
+                              className="text-white"
+                              style={{ fontStyle: "italic" }}
+                            >
+                              {item}
+                            </h5>
+                          </div>
+                        ))}
+                      </Marquee>
+                    </div>
+                  )}
+                </div>
+              </div>
             </section>
           </div>
 
@@ -333,31 +349,44 @@ function About() {
             </h1>
           </div>
           {data.successstories.length === 0 ? (
-   <p style={{ fontStyle: "italic", fontSize: "24px", color: "gray", margin: "20px" }}>
-   Nothing to display yet
- </p>
-) : (
-  <div className="horizontal-scroll-carousel align-items-end justify-content-end d-flex">
-    <Marquee className="rounded-2" pauseOnHover="true" style={{ width: "95%" }}>
-      {data.successstories.map((item, index) => (
-        <div className="card m-2 rounded-3" key={index} style={{ width: "18rem", background: "rgba(225, 225, 225, 0.1)" }}>
-          <div className="card-body">
-            <p className="text-danger text-bold-500">
-              <i>"</i>
-              <em>{item}</em>
-              <i>"</i>
+            <p
+              style={{
+                fontStyle: "italic",
+                fontSize: "24px",
+                color: "gray",
+                margin: "20px",
+              }}
+            >
+              Nothing to display yet
             </p>
-          </div>
-        </div>
-      ))}
-    </Marquee>
-  </div>
-)}
-
-
-
-
-          
+          ) : (
+            <div className="horizontal-scroll-carousel align-items-end justify-content-end d-flex">
+              <Marquee
+                className="rounded-2"
+                pauseOnHover="true"
+                style={{ width: "95%" }}
+              >
+                {data.successstories.map((item, index) => (
+                  <div
+                    className="card m-2 rounded-3"
+                    key={index}
+                    style={{
+                      width: "18rem",
+                      background: "rgba(225, 225, 225, 0.1)",
+                    }}
+                  >
+                    <div className="card-body">
+                      <p className="text-danger text-bold-500">
+                        <i>"</i>
+                        <em>{item}</em>
+                        <i>"</i>
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </Marquee>
+            </div>
+          )}
         </div>
       )}
     </div>

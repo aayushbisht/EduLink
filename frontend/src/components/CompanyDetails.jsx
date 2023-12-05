@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import TagsInput from 'react-tagsinput'
+import TagsInput from "react-tagsinput";
 
-import 'react-tagsinput/react-tagsinput.css'
+import "react-tagsinput/react-tagsinput.css";
 
 const CompanyDetails = (props) => {
-    // console.log(props);
+  // console.log(props);
   const [formData, setFormData] = useState({
     about: "",
     moto: "",
@@ -25,19 +25,19 @@ const CompanyDetails = (props) => {
       const values = { token, ...formData };
       console.log(values);
       props.setModal(false);
-      const response = await axios.post("/api/company/savedetails", values);
-        // console.log(response.data.message);
-      if(response.data.success)
-      {
-          toast.success(response.data.message);
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/savedetails",
+        values
+      );
+      // console.log(response.data.message);
+      if (response.data.success) {
+        toast.success(response.data.message);
         props.setModal(false);
-      }
-      else{
+      } else {
         toast.error(response.data.message);
       }
-      
     } catch (error) {
-        toast.error(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -81,7 +81,15 @@ const CompanyDetails = (props) => {
         </div>
         <div className="form-group my-3">
           <label htmlFor="website">Company's Website:</label>
-          <input className="form-control" type="url" name="website" id="website" value={formData.website} onChange={handleInputChange} required/>
+          <input
+            className="form-control"
+            type="url"
+            name="website"
+            id="website"
+            value={formData.website}
+            onChange={handleInputChange}
+            required
+          />
         </div>
         <div className="form-group my-3">
           <label htmlFor="employees">Number of Employes:</label>
@@ -111,18 +119,28 @@ const CompanyDetails = (props) => {
         <div className="form-group my-3">
           <label htmlFor="domains">Tech Domains:</label>
 
-          <TagsInput value={formData.domains} onChange={handleTagsChange} required/>
+          <TagsInput
+            value={formData.domains}
+            onChange={handleTagsChange}
+            required
+          />
         </div>
         <div className="form-group my-3">
           <label htmlFor="location">Company's Location:</label>
-          <input className="form-control" type="text" name="location" id="location" value={formData.location} onChange={handleInputChange} required/>
+          <input
+            className="form-control"
+            type="text"
+            name="location"
+            id="location"
+            value={formData.location}
+            onChange={handleInputChange}
+            required
+          />
         </div>
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
       </form>
-
-      
     </div>
   );
 };
