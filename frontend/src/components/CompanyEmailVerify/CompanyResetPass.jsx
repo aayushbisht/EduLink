@@ -24,6 +24,8 @@ const CompanyResetPass = () => {
         }, 1000);
 
         return () => clearInterval(interval);
+
+       
       } catch (error) {
         console.log(error);
         setValidUrl(true);
@@ -34,9 +36,10 @@ const CompanyResetPass = () => {
 
   useEffect(() => {
     if (countdown === 0) {
-      setValidUrl(false);
+      setValidUrl(false)
     }
   }, [countdown]);
+
 
   return (
     <Fragment>

@@ -34,7 +34,7 @@ const CollegeResetPass = () => {
 
   useEffect(() => {
     if (countdown === 0) {
-      setValidUrl(false);
+      setValidUrl(false)
     }
   }, [countdown]);
 

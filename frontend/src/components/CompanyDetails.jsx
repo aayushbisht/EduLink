@@ -35,7 +35,7 @@ const CompanyDetails = () => {
       if (response.data.success) {
         toast.success(response.data.message);
         // props.setModal(false);
-        navigate("/companypage");
+        navigate("/companypage")
       } else {
         toast.error(response.data.message);
       }

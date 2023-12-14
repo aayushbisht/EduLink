@@ -22,6 +22,8 @@ const CompanyEmailVerify = () => {
         }, 1000);
 
         return () => clearInterval(interval);
+
+
       } catch (error) {
         console.log(error);
         setValidUrl(true);
@@ -34,20 +36,23 @@ const CompanyEmailVerify = () => {
       navigate("/companylogin");
     }
   }, [countdown, navigate]);
+  useEffect(() => {
+    if (countdown === 0) {
+      navigate("/companylogin");
+    }
+  }, [countdown, navigate]);
 
   return (
     <div className={styles.container}>
       {validUrl ? (
-        <>
+        <div className={styles.container}>
           <img src={success} alt="success_img" className={styles.success_img} />
           <h1>Company Email verified successfully</h1>
           <p>Automatically Redirecting in {countdown}...</p>
           <Link to="/companylogin">
-            <button className={styles.green_btn} disabled={countdown > 0}>
-              Login
-            </button>
+            <button className={styles.green_btn}>Login</button>
           </Link>
-        </>
+        </div>
       ) : (
         <h1>404 Not Found</h1>
       )}
