@@ -1,4 +1,4 @@
-.loading {
+.Loading {
     width: 50px; /* Set your desired width */
     height: 50px; /* Set your desired height */
     background-color: white;
@@ -7,10 +7,10 @@
     max-width: 100%;
   }
   
-  .loading > div {
+  .Loading > div {
     width: 20px; /* Set your desired width for the rotating part */
     height: 20px; /* Set your desired height for the rotating part */
-    border-bottom: 4px solid pink;
+    border-bottom: 4px solid blue;
     border-radius: 50%;
     animation: loadingRotate 800ms linear infinite;
   }

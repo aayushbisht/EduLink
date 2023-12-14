@@ -26,11 +26,16 @@ const CollegeLogin = () => {
     e.preventDefault();
     try {
       const values = { email, password };
-      const response = await axios.post("/api/college/login", values);
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/college/login",
+        values
+      );
       if (response.data.success) {
         toast.success(response.data.message);
+        console.log(response.data);
         localStorage.setItem("collegetoken", response.data.data);
-        navigate("/collegepage");
+        if (response.data.user.firstLogin) navigate("/add/collegedetails");
+        else navigate("/collegepage");
       } else {
         toast.error(response.data.message);
       }

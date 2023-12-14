@@ -17,24 +17,27 @@ const EditCollegeDetails = ({ closeModal, existingData }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/college/updatedetails", {
-        token,
-        about: formData.about,
-        moto: formData.moto,
-        employees: formData.employees,
-        ethics: formData.ethics,
-        domains: formData.domains,
-        location: formData.location,
-        studentsplaced: formData.studentsplaced,
-        naacranking: formData.naacranking,
-        maxpackage: formData.maxpackage,
-        averagepackage: formData.averagepackage,
-        alumninetwork: formData.alumninetwork,
-        foreigntieups: formData.foreigntieups,
-        researchpapers: formData.researchpapers,
-        internshipoffered: formData.internshipoffered,
-        companiesvisited: formData.companiesvisited,
-      });
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/college/updatedetails",
+        {
+          token,
+          about: formData.about,
+          moto: formData.moto,
+          employees: formData.employees,
+          ethics: formData.ethics,
+          domains: formData.domains,
+          location: formData.location,
+          studentsplaced: formData.studentsplaced,
+          naacranking: formData.naacranking,
+          maxpackage: formData.maxpackage,
+          averagepackage: formData.averagepackage,
+          alumninetwork: formData.alumninetwork,
+          foreigntieups: formData.foreigntieups,
+          researchpapers: formData.researchpapers,
+          internshipoffered: formData.internshipoffered,
+          companiesvisited: formData.companiesvisited,
+        }
+      );
 
       if (response.data.success) {
         window.location.reload();

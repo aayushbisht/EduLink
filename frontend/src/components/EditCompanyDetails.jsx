@@ -24,20 +24,23 @@ const EditCompanyDetails = ({ closeModal, existingData }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/company/updatedetails", {
-        token,
-        about: formData.about,
-        moto: formData.moto,
-        employees: formData.employees,
-        ethics: formData.ethics,
-        domains: formData.domains,
-        location: formData.location,
-        studentdomain: formData.studentdomain,
-        hiringperiod: formData.hiringperiod,
-        successstories: formData.successstories,
-        industrypartnership: formData.industrypartnership,
-        workculture: formData.workculture,
-      });
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/updatedetails",
+        {
+          token,
+          about: formData.about,
+          moto: formData.moto,
+          employees: formData.employees,
+          ethics: formData.ethics,
+          domains: formData.domains,
+          location: formData.location,
+          studentdomain: formData.studentdomain,
+          hiringperiod: formData.hiringperiod,
+          successstories: formData.successstories,
+          industrypartnership: formData.industrypartnership,
+          workculture: formData.workculture,
+        }
+      );
 
       if (response.data.success) {
         window.location.reload();

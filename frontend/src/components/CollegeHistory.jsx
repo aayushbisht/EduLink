@@ -17,7 +17,9 @@ function CollegeHistory({ loggedInUserId }) {
   };
   const getCollegeData = async () => {
     try {
-      const response = await axios.post("/api/company/getcollegedata");
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/getcollegedata"
+      );
       setCollegeDataList(response.data.data);
     } catch (error) {
       console.error(error);

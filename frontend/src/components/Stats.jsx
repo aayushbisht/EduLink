@@ -16,7 +16,7 @@ const Stats = () => {
     const fetchrejectedData = async () => {
       try {
         const response = await axios.get(
-          `/api/tieup/getRejectionCount/${userId}`
+          `https://edulink-backend.onrender.com/api/tieup/getRejectionCount/${userId}`
         );
         setRejectionData(response.data.finalRejectionCount);
         console.log(response.data.finalRejectionCount);
@@ -26,7 +26,9 @@ const Stats = () => {
     };
     const fetchacceptedData = async () => {
       try {
-        const response = await axios.get(`/api/tieup/accepted/${userId}`);
+        const response = await axios.get(
+          `https://edulink-backend.onrender.com/api/tieup/accepted/${userId}`
+        );
         setAcceptedData(response.data.userAcceptedTieUpsSize);
       } catch (error) {
         console.error("Error fetching rejection data:", error);
@@ -34,7 +36,9 @@ const Stats = () => {
     };
     const fetchpendingData = async () => {
       try {
-        const response = await axios.get(`/api/tieup/pending/${userId}`);
+        const response = await axios.get(
+          `https://edulink-backend.onrender.com/api/tieup/pending/${userId}`
+        );
         setPendingData(response.data.userPendingTieUpsSize);
       } catch (error) {
         console.error("Error fetching rejection data:", error);

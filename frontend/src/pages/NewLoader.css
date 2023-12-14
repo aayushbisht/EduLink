@@ -11,7 +11,7 @@
 .loading > div{
     width: 10vmax;
     height: 10vmax;
-    border-bottom: 4px solid pink;
+    border-bottom: 5px solid blue;
     border-radius: 50%;
     animation: loadingRotate 800ms linear infinite;
 

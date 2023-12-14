@@ -10,7 +10,7 @@ const CollegeCard = ({ collegeData, loggedInUserId, handleClick }) => {
     async function fetchTieUpStatus() {
       try {
         const response = await axios.get(
-          `/api/tieup/statuscheck/${loggedInUserId}/${collegeData._id}`
+          `https://edulink-backend.onrender.com/api/tieup/statuscheck/${loggedInUserId}/${collegeData._id}`
         );
 
         if (response.data.success === true) {
@@ -40,11 +40,14 @@ const CollegeCard = ({ collegeData, loggedInUserId, handleClick }) => {
   const handleTieUpRequest = async (event) => {
     event.stopPropagation();
     try {
-      const response = await axios.post("/api/tieup/request", {
-        senderId: loggedInUserId,
-        receiverId: collegeData._id,
-        userType: "company",
-      });
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/tieup/request",
+        {
+          senderId: loggedInUserId,
+          receiverId: collegeData._id,
+          userType: "company",
+        }
+      );
 
       if (response.data.success) {
         console.log("Tie-up request sent successfully");

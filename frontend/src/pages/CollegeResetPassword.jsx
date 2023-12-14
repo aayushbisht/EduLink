@@ -1,42 +1,46 @@
-  import React from 'react';
-  import {motion as m} from "framer-motion";
-  import { useState } from 'react';
-  import { useNavigate } from 'react-router-dom';
-  import { useParams } from 'react-router-dom';
-  import toast, { Toaster } from 'react-hot-toast';
-  import axios from 'axios';
+import React from "react";
+import { motion as m } from "framer-motion";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 const CollegeResetPassword = () => {
-    const [newpassword, setnewPassword] = useState('');  
-    const [confirmpassword, setconfirmPassword] = useState('');
-    const param = useParams();
-    const navigate = useNavigate();
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      if (newpassword !== confirmpassword) {
-        toast.error('Passwords do not match');
-        return;
-      }
-  
-      try {
-        const response = await axios.post(`/api/college/reset-password/${param.id}`, {
+  const [newpassword, setnewPassword] = useState("");
+  const [confirmpassword, setconfirmPassword] = useState("");
+  const param = useParams();
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (newpassword !== confirmpassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `https://edulink-backend.onrender.com/api/college/reset-password/${param.id}`,
+        {
           newpassword,
-        });
-        toast.success(response.data.message);
-        navigate('/collegelogin');
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Error resetting password. Please try again.');
-      }
-    };
+        }
+      );
+      toast.success(response.data.message);
+      navigate("/collegelogin");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error resetting password. Please try again.");
+    }
+  };
   return (
     <div>
-
-<Toaster />
-      <m.div initial={{ x: -60, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }} 
-      transition={{ duration: 1, ease: 'easeInOut' }}>
-        <section className='vh-100'>
+      <Toaster />
+      <m.div
+        initial={{ x: -60, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+      >
+        <section className="vh-100">
           <div className="container py-5 h-100">
             <div className="row d-flex align-items-center justify-content-center h-100">
               <div className="col-md-8 col-lg-7 col-xl-6">
@@ -50,20 +54,20 @@ const CollegeResetPassword = () => {
                 <form
                   className="p-4 bg-white rounded shadow-sm"
                   style={{
-                    color: '#333', 
-                    backgroundColor: '#f9f9f9', 
-                    border: '1px solid #ccc', 
+                    color: "#333",
+                    backgroundColor: "#f9f9f9",
+                    border: "1px solid #ccc",
                   }}
                   onSubmit={handleSubmit}
                 >
                   <h2
                     className="mb-4"
                     style={{
-                      fontSize: '2.5rem', 
-                      fontWeight: 'bold', 
-                      color: '#007bff', 
-                      borderBottom: '2px solid #007bff', 
-                      paddingBottom: '0.5rem', 
+                      fontSize: "2.5rem",
+                      fontWeight: "bold",
+                      color: "#007bff",
+                      borderBottom: "2px solid #007bff",
+                      paddingBottom: "0.5rem",
                     }}
                   >
                     Reset Password
@@ -78,7 +82,6 @@ const CollegeResetPassword = () => {
                       required
                       value={newpassword}
                       onChange={(e) => setnewPassword(e.target.value)}
-                     
                     />
                   </div>
 
@@ -98,40 +101,32 @@ const CollegeResetPassword = () => {
                     type="submit"
                     className="btn btn-primary btn-lg btn-block"
                     style={{
-                      backgroundColor: '#007bff',
-                      borderColor: '#007bff',
+                      backgroundColor: "#007bff",
+                      borderColor: "#007bff",
                     }}
                   >
                     Confirm Password
                   </button>
-                 
+
                   <button
                     className="btn btn-primary btn-lg btn-block"
                     style={{
-                      backgroundColor: '#007bff',
-                      borderColor: '#007bff',
-                      marginLeft: '10px',
+                      backgroundColor: "#007bff",
+                      borderColor: "#007bff",
+                      marginLeft: "10px",
                     }}
-                    onClick={() => navigate('/collegelogin')}
+                    onClick={() => navigate("/collegelogin")}
                   >
                     College Login
                   </button>
-
                 </form>
               </div>
             </div>
           </div>
         </section>
       </m.div>
-
-
-
-
-
-
-
     </div>
-  )
-}
+  );
+};
 
-export default CollegeResetPassword
+export default CollegeResetPassword;

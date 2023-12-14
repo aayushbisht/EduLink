@@ -19,7 +19,9 @@ const CompanyList = () => {
 
   const getCompanyData = async () => {
     try {
-      const response = await axios.post("/api/college/getcompanydata");
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/college/getcompanydata"
+      );
       setCompanyDataList(response.data.data);
     } catch (error) {
       console.error(error);

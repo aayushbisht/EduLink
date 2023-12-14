@@ -26,13 +26,19 @@ const CheckAboutCollege = () => {
       // const token = localStorage.getItem("companytoken");
       const token = params.collegeId;
 
-      const response = await axios.post("/api/college/getcollegedetail", {
-        token,
-      });
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/college/getcollegedetail",
+        {
+          token,
+        }
+      );
       const collegeData = response.data.data;
       setData(collegeData);
       console.log(collegeData);
-      const data = await axios.post("/api/college/findcollege", { token });
+      const data = await axios.post(
+        "https://edulink-backend.onrender.com/api/college/findcollege",
+        { token }
+      );
       const collegeNam = data.data.data;
       setCollege(collegeNam);
       setIsLoading(false);

@@ -1,11 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { CollegeAbout, Tieups, CompanyHistory, Navbar, CompanyList, Stats } from '../components/index';
-import axios from 'axios';
-import { Toaster } from 'react-hot-toast';
-import CollegeDetail from '../components/CollegeDetail';
-import NewLoader from '../Loader/NewLoader';
-import bg1 from '../animations/bg1.png'; 
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  CollegeAbout,
+  Tieups,
+  CompanyHistory,
+  Navbar,
+  CompanyList,
+  Stats,
+} from "../components/index";
+import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import CollegeDetail from "../components/CollegeDetail";
+import NewLoader from "./NewLoader";
 
 const CollegePage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -17,7 +23,7 @@ const CollegePage = () => {
     try {
       const token = localStorage.getItem("collegetoken");
       const data = await axios.post(
-        "/api/college/findcollege",
+        "https://edulink-backend.onrender.com/api/college/findcollege",
         { token }
       );
       const collegeData = data.data.data;
@@ -26,11 +32,9 @@ const CollegePage = () => {
       if (collegeData.firstLogin) {
         setShowModal(true);
       }
-
     } catch (error) {
       console.error(error);
-    }
-    finally{
+    } finally {
       setIsLoading(false);
     }
   };
@@ -38,7 +42,7 @@ const CollegePage = () => {
   const handleTieupsCountChange = () => {
     axios
       .get(
-        `/api/tieup/pending/${localStorage.getItem(
+        `https://edulink-backend.onrender.com/api/tieup/pending/${localStorage.getItem(
           "collegetoken"
         )}`
       )
@@ -67,69 +71,119 @@ const CollegePage = () => {
         <>
           <Toaster />
           <div className="container-fluid p-0 position-relative">
-            {showModal ? (
-          <div className="modal fade show" style={{ display: "block",backgroundImage:  `url(${bg1})`, backgroundSize:"100% 100%", backgroundRepeat: "no-repeat",backdropFilter: "blur(5px)"  }}>                <div className="modal-dialog modal-dialog-centered" role="document">
-                  <div className="modal-content">
-                    <div className="modal-header" style={{ margin: "0 auto" }}>
-                      <h5 className="modal-title" id="exampleModalLongTitle" style={{ margin: "0 auto" }}>
-                        Welcome to EduLink
-                      </h5>
-                    </div>
-                    <div className="modal-body">
-                      <CollegeDetail setModal={setShowModal} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <>
-                <Navbar />
-                <div style={{ height: "50vh" }}>
-                  <img
-                    src={college.avatar && college.avatar.url ? college.avatar.url : "./assets/images/bg1.png"}
-                    alt="Your Image"
-                    className="img-fluid"
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </div>
+            <Navbar />
+            <div style={{ height: "50vh" }}>
+              <img
+                src={
+                  college.avatar && college.avatar.url
+                    ? college.avatar.url
+                    : "./assets/images/bg1.png"
+                }
+                alt="Your Image"
+                className="img-fluid"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </div>
 
-                <div className="profile-box" style={{ position: "absolute", transform: "translate(110%, -33%)", zIndex: '999', width:"250px" }}>
-                  <img src={college.avatar && college.avatar.url ? college.avatar.url : "./assets/images/bg1.png"} alt="Profile Picture" className="img-fluid" style={{ width: "130px", height: "130px" }} />
-                  <h2>{college.collegeName}</h2>
-                  <p>{college.collegeType}</p>
-                </div>
+            <div
+              className="profile-box"
+              style={{
+                position: "absolute",
+                transform: "translate(110%, -33%)",
+                zIndex: "999",
+                width: "250px",
+              }}
+            >
+              <img
+                src={
+                  college.avatar && college.avatar.url
+                    ? college.avatar.url
+                    : "./assets/images/bg1.png"
+                }
+                alt="Profile Picture"
+                className="img-fluid"
+                style={{ width: "130px", height: "130px" }}
+              />
+              <h2>{college.collegeName}</h2>
+              <p>{college.collegeType}</p>
+            </div>
 
-                <nav className="navbar navbar-expand-md navbar-light bg-light">
-                  <ul className="navbar-nav mx-auto">
-                    <li className="nav-item">
-                      <Link className="nav-link" onClick={() => handleNavItemClick('about')} >About</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" onClick={() => handleNavItemClick('company')}>Browse Companies</Link>
-                    </li>
-                    <li className="nav-item position-relative">
-                      <Link className="nav-link" onClick={() => handleNavItemClick('tieups')} style={{ marginRight: "8px" }}>
-                        Your Tie-Ups
-                        <span className="badge" style={{ backgroundColor: 'red', color: 'white', padding: '1px 7px', borderRadius: '50%', position: 'absolute', top: '0px', right: '0px' }}>{tieupsCount}</span>
-                      </Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" onClick={() => handleNavItemClick('history')}>History</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link" onClick={() => handleNavItemClick('statistics')}>Statistics</Link>
-                    </li>
-                  </ul>
-                </nav>
-                <div style={{ marginTop: "80px" }}>
-                  {selectedItem === 'about' && <CollegeAbout />}
-                  {selectedItem === 'tieups' && <Tieups loggedInUserId={localStorage.getItem('collegetoken')} onTieupsCountChange={handleTieupsCountChange} />}
-                  {selectedItem === 'history' && <CompanyHistory loggedInUserId={localStorage.getItem('collegetoken')} onTieupsCountChange={handleTieupsCountChange} />}
-                  {selectedItem === 'company' && <CompanyList />}
-                  {selectedItem === 'statistics' && <Stats />}
-                </div>
-              </>
-            )}
+            <nav className="navbar navbar-expand-md navbar-light bg-light">
+              <ul className="navbar-nav mx-auto">
+                <li className="nav-item">
+                  <Link
+                    className="nav-link"
+                    onClick={() => handleNavItemClick("about")}
+                  >
+                    About
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link"
+                    onClick={() => handleNavItemClick("company")}
+                  >
+                    Browse Companies
+                  </Link>
+                </li>
+                <li className="nav-item position-relative">
+                  <Link
+                    className="nav-link"
+                    onClick={() => handleNavItemClick("tieups")}
+                    style={{ marginRight: "8px" }}
+                  >
+                    Your Tie-Ups
+                    <span
+                      className="badge"
+                      style={{
+                        backgroundColor: "red",
+                        color: "white",
+                        padding: "1px 7px",
+                        borderRadius: "50%",
+                        position: "absolute",
+                        top: "0px",
+                        right: "0px",
+                      }}
+                    >
+                      {tieupsCount}
+                    </span>
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link"
+                    onClick={() => handleNavItemClick("history")}
+                  >
+                    History
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className="nav-link"
+                    onClick={() => handleNavItemClick("statistics")}
+                  >
+                    Statistics
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+            <div style={{ marginTop: "80px" }}>
+              {selectedItem === "about" && <CollegeAbout />}
+              {selectedItem === "tieups" && (
+                <Tieups
+                  loggedInUserId={localStorage.getItem("collegetoken")}
+                  onTieupsCountChange={handleTieupsCountChange}
+                />
+              )}
+              {selectedItem === "history" && (
+                <CompanyHistory
+                  loggedInUserId={localStorage.getItem("collegetoken")}
+                  onTieupsCountChange={handleTieupsCountChange}
+                />
+              )}
+              {selectedItem === "company" && <CompanyList />}
+              {selectedItem === "statistics" && <Stats />}
+            </div>
           </div>
         </>
       )}

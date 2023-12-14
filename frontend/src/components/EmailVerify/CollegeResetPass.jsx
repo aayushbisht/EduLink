@@ -6,17 +6,16 @@ import success from "./success.png";
 import axios from "axios";
 import CollegeResetPassword from "../../pages/CollegeResetPassword";
 
-
 const CollegeResetPass = () => {
   const [validUrl, setValidUrl] = useState(true);
   const [countdown, setCountdown] = useState(5);
   const param = useParams();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const url = `/api/college/${param.id}/verify/${param.token}`;
+        const url = `https://edulink-backend.onrender.com/api/college/${param.id}/verify/${param.token}`;
         const { data } = await axios.get(url);
         setValidUrl(true);
 
@@ -24,10 +23,7 @@ const CollegeResetPass = () => {
           setCountdown((prevCountdown) => prevCountdown - 1);
         }, 1000);
 
-        setTimeout(() => {
-          clearInterval(interval);
-          setValidUrl(false);
-        }, 5000);
+        return () => clearInterval(interval);
       } catch (error) {
         console.log(error);
         setValidUrl(true);
@@ -36,18 +32,24 @@ const CollegeResetPass = () => {
     verifyEmail();
   }, [param, navigate]);
 
+  useEffect(() => {
+    if (countdown === 0) {
+      setValidUrl(false);
+    }
+  }, [countdown]);
+
   return (
     <Fragment>
-    {validUrl ? (
-      <div className={styles.container}>
-        <img src={success} alt="success_img" className={styles.success_img} />
-        <h1>College Email verified successfully</h1>
-        <p>Automatically Redirecting in {countdown}...</p>
-      </div>
-    ) : (
-       <CollegeResetPassword />
-    )}
-  </Fragment>
+      {validUrl ? (
+        <div className={styles.container}>
+          <img src={success} alt="success_img" className={styles.success_img} />
+          <h1>College Email verified successfully</h1>
+          <p>Automatically Redirecting in {countdown}...</p>
+        </div>
+      ) : (
+        <CollegeResetPassword />
+      )}
+    </Fragment>
   );
 };
 

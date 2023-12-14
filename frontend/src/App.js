@@ -18,6 +18,8 @@ import CollegeEmail from "./pages/CollegeEmail";
 import CollegeResetPass from "./components/EmailVerify/CollegeResetPass";
 import CompanyEmail from "./pages/CompanyEmail"
 import CompanyResetPass from "./components/CompanyEmailVerify/CompanyResetPass";
+import CollegeDetail from "./components/CollegeDetail";
+import CompanyDetails from "./components/CompanyDetails";
 
 
 function App() {
@@ -44,6 +46,8 @@ function App() {
           <Route exact path="/collegereset/:id/verify/:token" element={<CollegeResetPass/>} />
           <Route exact path="/companyreset" element={<CompanyEmail />} />
           <Route exact path="/companyreset/:id/verify/:token" element={<CompanyResetPass/>} />
+          <Route exact path="/add/collegedetails" element={<CollegeDetail />} />
+          <Route exact path="/add/companydetails" element={<CompanyDetails />} />
 
           <Route exact path="/stats" element={<Stats />} />
 

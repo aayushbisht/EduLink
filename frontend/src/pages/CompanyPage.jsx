@@ -11,8 +11,7 @@ import {
 import axios from "axios";
 import CompanyDetails from "../components/CompanyDetails";
 import { Toaster } from "react-hot-toast";
-import NewLoader from "../Loader/NewLoader";
-import bg1 from '../animations/bg1.png'; 
+import NewLoader from "./NewLoader";
 
 const CompanyPage = () => {
   const [selectedItem, setSelectedItem] = useState("about");
@@ -28,7 +27,10 @@ const CompanyPage = () => {
   const findUser = async () => {
     try {
       const token = localStorage.getItem("companytoken");
-      const userData = await axios.post("/api/company/findcompany", { token });
+      const userData = await axios.post(
+        "https://edulink-backend.onrender.com/api/company/findcompany",
+        { token }
+      );
       const companyData = userData.data.data;
       setCompany(companyData);
       setIsLoading(false);
@@ -43,7 +45,11 @@ const CompanyPage = () => {
 
   const handleTieupsCountChange = () => {
     axios
-      .get(`/api/tieup/pending/${localStorage.getItem("companytoken")}`)
+      .get(
+        `https://edulink-backend.onrender.com/api/tieup/pending/${localStorage.getItem(
+          "companytoken"
+        )}`
+      )
       .then((response) => setTieupsCount(response.data.pendingRequests.length))
       .catch((error) =>
         console.error("Error fetching pending requests count:", error)
@@ -58,24 +64,9 @@ const CompanyPage = () => {
   return (
     <>
       <Toaster />
-      <div className="container-fluid p-0 position-relative ">
+      <div className="container-fluid p-0 position-relative">
         {isLoading ? (
           <NewLoader />
-        ) : showModal ? (
-          <div className="modal fade show" style={{ display: "block",backgroundImage:  `url(${bg1})`, backgroundSize:"100% 100%", backgroundRepeat: "no-repeat",backdropFilter: "blur(5px)"  }}>
-            <div className="modal-dialog modal-dialog-centered" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="exampleModalLongTitle">
-                    Welcome to EduLink
-                  </h5>
-                </div>
-                <div className="modal-body">
-                  <CompanyDetails setModal={setShowModal} />
-                </div>
-              </div>
-            </div>
-          </div>
         ) : (
           <>
             <Navbar />
@@ -99,7 +90,7 @@ const CompanyPage = () => {
                 position: "absolute",
                 transform: "translate(110%, -33%)",
                 zIndex: "999",
-                width:"250px"
+                width: "250px",
               }}
             >
               <img

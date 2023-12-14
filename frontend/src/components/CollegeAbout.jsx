@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import NewLoader from "../Loader/NewLoader";
+import NewLoader from "../pages/NewLoader";
 import Marquee from "react-fast-marquee";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -25,13 +25,19 @@ const CollegeAbout = () => {
   const findDetail = async () => {
     try {
       const token = collegeId || localStorage.getItem("collegetoken");
-      const response = await axios.post("/api/college/getcollegedetail", {
-        token,
-      });
+      const response = await axios.post(
+        "https://edulink-backend.onrender.com/api/college/getcollegedetail",
+        {
+          token,
+        }
+      );
       const collegeData = response.data.data;
       setData(collegeData);
 
-      const data = await axios.post("/api/college/findcollege", { token });
+      const data = await axios.post(
+        "https://edulink-backend.onrender.com/api/college/findcollege",
+        { token }
+      );
       const collegeNam = data.data.data;
       setCollege(collegeNam);
 
