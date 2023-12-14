@@ -112,9 +112,7 @@ const CollegeLogin = () => {
 
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div></div>
-                    <Link to="#!" className="text-primary">
-                      Forgot password?
-                    </Link>
+                    <Link to="/collegereset" className="text-primary">Forgot password?</Link>
                   </div>
                   <Redirection type={"company"} />
 

@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import Chat from "./Chat";
 import "./search.css";
 import { FaSearch } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 const CompanyList = () => {
   const [companyDataList, setCompanyDataList] = useState([]);
   const [socket, setSocket] = useState(null);
@@ -74,14 +75,23 @@ const CompanyList = () => {
             </div>
           </div>
 
-          {filteredCompanyData.map((companyData) => (
+          { filteredCompanyData.length>0 ? filteredCompanyData.map((companyData) => (
             <CompanyCard
               key={companyData._id}
               companyData={companyData}
               loggedInUserId={localStorage.getItem("collegetoken")}
               handleClick={() => handleCardClick(companyData)}
             />
-          ))}
+          ))
+          :(
+            <div className="text-center" style={{ height: '100px' }}>
+  <FaExclamationCircle size={30} color="#ff6347" />
+  <p className="card-text fs-5 fw-bold mb-0 mt-2">No Company Found!</p>
+</div>
+
+          )
+        
+        }
         </div>
         <div className="col-md-6">
           {selectedCompany ? (

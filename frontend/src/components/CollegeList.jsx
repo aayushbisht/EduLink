@@ -5,6 +5,7 @@ import CollegeCard from "./CollegeCard";
 import { io } from "socket.io-client";
 import Chat from "./Chat";
 import { FaSearch } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 import "./search.css";
 
 const CollegeList = () => {
@@ -72,20 +73,27 @@ const CollegeList = () => {
                 name=""
               />
               <a href="#" class="search-icon">
-                {/* <i class="fa fa-search"></i> */}
                 <FaSearch />
               </a>
             </div>
           </div>
-
-          {filteredCompanyData.map((collegeData) => (
+          
+          {filteredCompanyData.length > 0 ? filteredCompanyData.map((collegeData) => (
             <CollegeCard
               key={collegeData._id}
               collegeData={collegeData}
               loggedInUserId={localStorage.getItem("companytoken")}
               handleClick={() => handleCardClick(collegeData)}
             />
-          ))}
+          )):
+          (
+            <div className="text-center">
+            <FaExclamationCircle size={30} color="#ff6347" />
+            <p className="card-text fs-5 fw-bold mb-0 mt-2">No College Found!</p>
+          </div>
+          )
+
+          }
         </div>
         <div className="col-md-6">
           {selectedCollege ? (

@@ -10,35 +10,57 @@ const sendEmail = require("../utils/sendEmail.js");
 const crypto = require("crypto");
 const cloudinary = require("cloudinary");
 
+
+
 router.post("/register", async (req, res) => {
-    try {
-      const mycloud = await cloudinary.v2.uploader.upload(req.body.avatar,{
-        folder:"avatars",
-        width:150,
-        crop:"scale",
-      })
-      const companyExists = await Company.findOne({ email: req.body.email });
-      if (companyExists) {
-        const cloudinary = require("cloudinary");
-        return res.status(200).json({
-          message: "Company already exists",
-          success: false,
-        });
-      }
+  try {
+    let avatarData = {};
+
+    if (req.body.avatar) {
+      // If user provides an avatar, upload it to Cloudinary
+      const mycloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: "avatars",
+        width: 150,
+        crop: "scale",
+      });
+
+      // Set avatarData with Cloudinary information
+      avatarData = {
+        public_id: mycloud.public_id,
+        url: mycloud.secure_url,
+      };
+    } else {
+      // If user doesn't provide an avatar, set default values
+      avatarData = {
+        public_id: "avatars/zmveajugsfg2btb48jmn",
+        url: "https://res.cloudinary.com/de6p7x2tv/image/upload/v1701763716/avatars/zmveajugsfg2btb48jmn.png", // Set your default image path here
+      };
+    }
+
+    const companyExists = await Company.findOne({ email: req.body.email });
+    if (companyExists) {
+      return res.status(200).json({
+        message: "Company already exists",
+        success: false,
+      });
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashedPassword;
-    const newCompany = new Company({...req.body,
-      avatar: {
-        public_id: mycloud.public_id,
-        url: mycloud.secure_url,
-      },
+
+    const newCompany = new Company({
+      ...req.body,
+      avatar: avatarData,
     });
+
     await newCompany.save();
+
     const token = await new Token({
       userId: newCompany._id,
       token: crypto.randomBytes(32).toString("hex"),
-    }).save();
+    })
+    await token.save();
 
     const url = `${process.env.BASE_URL}/companyregister/${newCompany._id}/verify/${token.token}`;
 
@@ -52,10 +74,11 @@ router.post("/register", async (req, res) => {
     console.log(error);
     res.status(500).send({
       message: error.message,
-      succes: false,
+      success: false,
     });
   }
 });
+
 
 router.post("/login", async (req, res) => {
   try {
@@ -243,17 +266,73 @@ router.get("/:id/verify/:token", async (req, res) => {
       userId: user._id,
       token: req.params.token,
     });
-    if (!token) return res.status(400).send({ message: "Invalid link" });
-    console.log("hap");
-    // await College.updateOne({ _id: user._id, verified: true });
+    if (!token) return res.status(400).send({ message: "Invalid link" })
     await Company.updateOne({ _id: user._id }, { $set: { verified: true } });
-    // await token.remove();
-    await Token.deleteOne({ userId: user._id, token: req.params.token });
-    console.log("Confirm");
-
     return res.status(200).send({ message: "Email verified successfully" });
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).send({ message: "Intern Server Error" });
   }
 });
+
+router.post('/verify-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const company = await Company.findOne({ email: email });
+
+    if (!company) {
+      return res.status(404).send({ message: "College not found" });
+    }
+
+    const companyId = company._id;
+
+    if (!companyId) {
+      return res.status(404).send({ message: "College ID not found" });
+    }
+
+    const existingToken = await Token.findOne({ userId: companyId });
+
+    if (!existingToken) {
+      return res.status(404).send({ message: "Token not found for the college" });
+    }
+
+    const token = existingToken.token;
+    const verificationURL = `${process.env.BASE_URL}/companyreset/${companyId}/verify/${token}`;
+    
+    await sendEmail(company.email, "Verify Email", verificationURL);
+
+    return res.status(200).send({ message: "Email verification sent successfully" });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+router.post('/reset-password/:id', async (req, res) => {
+
+  try {
+    const { newpassword } = req.body;
+    const companyId = req.params.id;
+
+    const company = await Company.findOne({ _id: companyId });
+
+    if (!company) {
+      return res.status(404).send({ message: "Company not found" });
+    }
+    
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newpassword, salt);
+
+    await Company.updateOne({ _id: companyId }, { $set: { password: hashedPassword } });
+
+
+    return res.status(200).send({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+
+
+
+
+})

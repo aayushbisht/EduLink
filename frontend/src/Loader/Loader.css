@@ -1,0 +1,23 @@
+.loading {
+    width: 50px; /* Set your desired width */
+    height: 50px; /* Set your desired height */
+    background-color: white;
+    display: grid;
+    place-items: center;
+    max-width: 100%;
+  }
+  
+  .loading > div {
+    width: 20px; /* Set your desired width for the rotating part */
+    height: 20px; /* Set your desired height for the rotating part */
+    border-bottom: 4px solid pink;
+    border-radius: 50%;
+    animation: loadingRotate 800ms linear infinite;
+  }
+  
+  @keyframes loadingRotate {
+    to {
+      transform: rotateZ(-360deg);
+    }
+  }
+  

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { motion, useTransform, useScroll } from "framer-motion";
+import NewLoader from "../Loader/NewLoader";
 import Marquee from "react-fast-marquee";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -22,8 +22,6 @@ const CollegeAbout = () => {
 
   const navigate = useNavigate();
 
-  // console.log(college);
-
   const findDetail = async () => {
     try {
       const token = collegeId || localStorage.getItem("collegetoken");
@@ -35,7 +33,6 @@ const CollegeAbout = () => {
       );
       const collegeData = response.data.data;
       setData(collegeData);
-      console.log(collegeData);
 
       const data = await axios.post(
         "https://edulink-backend.onrender.com/api/college/findcollege",
@@ -48,6 +45,9 @@ const CollegeAbout = () => {
     } catch (error) {
       console.error(error);
     }
+    finally{
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -56,7 +56,6 @@ const CollegeAbout = () => {
 
   const [showModal, setShowModal] = useState(false);
   const handleOpenModal = () => {
-    console.log("Clicked");
     setShowModal(true);
   };
   const handleCloseModal = () => {
@@ -64,21 +63,17 @@ const CollegeAbout = () => {
   };
 
   return (
-    <div
-      className="my-5 container-md text-center"
-      style={{ width: "70%", marginTop: "30px" }}
-    >
-      {isLoading ? (
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      ) : (
+    <>
+   {isLoading ? (<NewLoader/> ) : (
+
+    <div className="my-5 container-md text-center" style={{ width: "70%", marginTop: "30px" }}>
+       
         <div class="row">
           {collegeId && (
-            <p className=" display-1 font-weight-bold">{college.collegeName}</p>
+            <p className="display-1 font-weight-bold">{college.collegeName}</p>
           )}
           {collegeId && (
-            <p className=" display-6 mb-5" style={{ marginTop: "-23px" }}>
+            <p className="display-6 mb-5" style={{ marginTop: "-23px" }}>
               {college.collegeType}
             </p>
           )}
@@ -104,7 +99,7 @@ const CollegeAbout = () => {
                           <i class="icon-user warning font-large-2 float-left"></i>
                         </div>
                         <div class="media-body text-right float-end">
-                          <h3>{data.employees}</h3>
+                          <h3>{data.employees ? data.employees : 0}</h3>
                           <span>Total Students</span>
                         </div>
                       </div>
@@ -120,8 +115,7 @@ const CollegeAbout = () => {
                         </div>
                         <div class="media-body text-right float-end">
                           <h3>
-                            {data.naacranking ===
-                            "Details will be available soon"
+                            {data.naacranking === "Details will be available soon"
                               ? "N/A"
                               : data.naacranking}
                           </h3>
@@ -181,6 +175,7 @@ const CollegeAbout = () => {
               </div>
             </div>
           </div>
+
           <div class=" col-9" style={{ height: "400px" }}>
             <Swiper
               direction={"vertical"}
@@ -204,6 +199,7 @@ const CollegeAbout = () => {
             </div>
           </div>
 
+          <div className="horizontal-scroll-carousel align-items-end justify-content-end d-flex ">
           <div className="horizontal-scroll-carousel align-items-end justify-content-end d-flex ">
             <div className="carousel " style={{ width: "95%" }}>
               <div className="card1 border border-3 border-primary rounded-3 shadow">
@@ -305,7 +301,8 @@ const CollegeAbout = () => {
               )}
             </div>
           </div>
-          <div className=" align-items-center justify-content-center d-flex mt-4">
+          </div>
+          <div className="align-items-center justify-content-center d-flex mt-4">
             <h1 className="display-5 text-center font-weight-bold mb-4">
               Companies Visited
               <hr
@@ -320,7 +317,7 @@ const CollegeAbout = () => {
               />
             </h1>
           </div>
-          <div className=" align-items-end justify-content-end d-flex">
+          <div className="align-items-end justify-content-end d-flex">
             <section
               id="counter"
               className="section-padding"
@@ -329,13 +326,7 @@ const CollegeAbout = () => {
               <div className="container text-center">
                 <div className="d-flex flex-column align-items-center">
                   {data.companiesvisited.length === 0 ? (
-                    <p
-                      style={{
-                        fontStyle: "italic",
-                        fontSize: "18px",
-                        color: "white",
-                      }}
-                    >
+                    <p style={{ fontStyle: "italic", fontSize: "18px", color: "white" }}>
                       No data available yet
                     </p>
                   ) : (
@@ -343,10 +334,7 @@ const CollegeAbout = () => {
                       <Marquee style={{ width: "100%" }}>
                         {data.companiesvisited.map((company, index) => (
                           <div className="card2" key={index}>
-                            <h5
-                              className="text-white"
-                              style={{ fontStyle: "italic" }}
-                            >
+                            <h5 className="text-white" style={{ fontStyle: "italic" }}>
                               {company}
                             </h5>
                           </div>
@@ -358,10 +346,7 @@ const CollegeAbout = () => {
                       >
                         {data.companiesvisited.map((company, index) => (
                           <div className="card2" key={index}>
-                            <h5
-                              className="text-white"
-                              style={{ fontStyle: "italic" }}
-                            >
+                            <h5 className="text-white" style={{ fontStyle: "italic" }}>
                               {company}
                             </h5>
                           </div>
@@ -373,10 +358,62 @@ const CollegeAbout = () => {
               </div>
             </section>
           </div>
+
+          {showModal && (
+            <div>
+              {/* Add the custom modal backdrop with inline CSS */}
+              <div
+                style={{
+                  position: "fixed",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor:
+                    "rgba(0, 0, 0, 0.5)" /* Semi-transparent background color */,
+                  zIndex: 1040 /* Ensure it's above the modal */,
+                }}
+                onClick={handleCloseModal}
+              ></div>
+              <div className="modal fade show" style={{ display: "block" }}>
+                <div
+                  className="modal-dialog modal-dialog-centered"
+                  role="document"
+                >
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <h5
+                        className="modal-title"
+                        id="exampleModalLongTitle"
+                      >
+                        Welcome to the EduLink
+                      </h5>
+                      <button
+                        type="button"
+                        className="close"
+                        onClick={handleCloseModal}
+                      >
+                        <span>&times;</span>
+                      </button>
+                    </div>
+                    <div className="modal-body">
+                      {/* <p>Enter Details!</p> */}
+                      <EditCollegeDetails
+                        closeModal={handleCloseModal}
+                        existingData={data}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      
     </div>
-  );
+  )};
+  </>
+  )
 };
 
 export default CollegeAbout;

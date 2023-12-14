@@ -31,17 +31,15 @@ const collegeSchema = new mongoose.Schema({
   },
   verified:{
     type: Boolean,
-    default : false,
+    default : true,
   },
   avatar:
         {
         public_id:{
             type:String,
-            required:true
         },
         url:{
             type:String,
-            required:true
         },
       },
 

@@ -14,12 +14,24 @@ const cloudinary = require("cloudinary");
 router.post("/register", async (req, res) => {
   try {
 
-    const mycloud = await cloudinary.v2.uploader.upload(req.body.avatar,{
-      folder:"avatars",
-      width:150,
-      crop:"scale",
-
-  })
+   let avatarData = {};
+   if (req.body.avatar) {
+    const mycloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "avatars",
+      width: 150,
+      crop: "scale",
+    });
+    avatarData = {
+      public_id: mycloud.public_id,
+      url: mycloud.secure_url,
+    };
+  } else {
+    avatarData = {
+      public_id: "avatars/zmveajugsfg2btb48jmn",
+      url: "https://res.cloudinary.com/de6p7x2tv/image/upload/v1701763716/avatars/zmveajugsfg2btb48jmn.png",
+    };
+  }
+   
   
     const collegeExists = await College.findOne({ email: req.body.email });
     if (collegeExists) {
@@ -36,23 +48,21 @@ router.post("/register", async (req, res) => {
     req.body.password = hashedPassword;
     const newCollege = new College({
       ...req.body,
-      avatar: {
-        public_id: mycloud.public_id,
-        url: mycloud.secure_url,
-      },
+      avatar: avatarData
     });
     await newCollege.save();
 
-    const token = await new Token({
+    const token = new Token({
       userId : newCollege._id,
       token : crypto.randomBytes(32).toString("hex")
 
-    }).save();
+    });
+    await token.save();
+
+    console.log(token.token);
 
     const url = `${process.env.BASE_URL}/collegeregister/${newCollege._id}/verify/${token.token}`;
-    // const url = `${process.env.BASE_URL}collegeregister/`;
-
-		await sendEmail(newCollege.email, "Verify Email", url);
+    await sendEmail(newCollege.email, "Verify Email", url);
 
     
     res.status(201).json({
@@ -151,7 +161,7 @@ router.post("/savedetails", async(req,res)=>{
     await College.findByIdAndUpdate(
       collegeId,
       { $set: { firstLogin: false } },
-      { new: true } // Return the updated document
+      { new: true } 
     );
 
     res.status(200).send({
@@ -258,19 +268,13 @@ router.get('/:id/verify/:token', async (req, res) => {
 	try {
 		const user = await College.findOne({ _id: req.params.id });
 		if (!user) return res.status(400).send({ message: "Invalid link" });
-    console.log("lol");
-    console.log(user);
-    console.log("User ID:", user._id);
 		const token = await Token.findOne({
 			userId: user._id,
 			token: req.params.token,
 		});
 		if (!token) return res.status(400).send({ message: "Invalid link" });
 console.log("hap");
-		// await College.updateOne({ _id: user._id, verified: true });
     await College.updateOne({ _id: user._id }, { $set: { verified: true } });
-		// await token.remove();
-    await Token.deleteOne({ userId: user._id, token: req.params.token });
     console.log("Confirm");
 
 		return res.status(200).send({ message: "Email verified successfully" });
@@ -279,4 +283,73 @@ console.log("hap");
 		return res.status(500).send({ message: "Intern Server Error" });
 	}
 });
-  module.exports = router;
+
+
+router.post('/verify-email', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const college = await College.findOne({ email: email });
+
+    if (!college) {
+      return res.status(404).send({ message: "College not found" });
+    }
+
+    const collegeId = college._id;
+
+    if (!collegeId) {
+      return res.status(404).send({ message: "College ID not found" });
+    }
+
+    const existingToken = await Token.findOne({ userId: collegeId });
+
+    if (!existingToken) {
+      return res.status(404).send({ message: "Token not found for the college" });
+    }
+
+    const token = existingToken.token;
+    const verificationURL = `${process.env.BASE_URL}/collegereset/${collegeId}/verify/${token}`;
+    
+    await sendEmail(college.email, "Verify Email", verificationURL);
+
+    return res.status(200).send({ message: "Email verification sent successfully" });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+
+router.post('/reset-password/:id', async (req, res) => {
+
+  try {
+    const { newpassword } = req.body;
+    const collegeId = req.params.id;
+
+    const college = await College.findOne({ _id: collegeId });
+
+    if (!college) {
+      return res.status(404).send({ message: "College not found" });
+    }
+    
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newpassword, salt);
+
+    await College.updateOne({ _id: collegeId }, { $set: { password: hashedPassword } });
+
+
+    return res.status(200).send({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+
+
+
+
+})
+
+
+
+
+
+module.exports = router;
