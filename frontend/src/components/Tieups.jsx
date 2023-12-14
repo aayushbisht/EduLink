@@ -14,9 +14,7 @@ const Tieups = ({ loggedInUserId, onTieupsCountChange }) => {
 
   const fetchAcceptedTieUps = async () => {
     try {
-      const response = await axios.get(
-        `https://edulink-backend.onrender.com/api/tieup/accepted/${loggedInUserId}`
-      );
+      const response = await axios.get(`/api/tieup/accepted/${loggedInUserId}`);
       if (response.data.success) {
         setAcceptedTieUps(response.data.acceptedTieUps);
       } else {
@@ -28,9 +26,7 @@ const Tieups = ({ loggedInUserId, onTieupsCountChange }) => {
   };
   const handleRemoveConnection = async (tieUpId) => {
     try {
-      const response = await axios.post(
-        `https://edulink-backend.onrender.com/api/tieup/reject/${tieUpId}`
-      );
+      const response = await axios.post(`/api/tieup/reject/${tieUpId}`);
 
       if (response.data.success) {
         fetchAcceptedTieUps();
@@ -46,7 +42,7 @@ const Tieups = ({ loggedInUserId, onTieupsCountChange }) => {
     const fetchPendingRequests = async () => {
       try {
         const response = await axios.get(
-          `https://edulink-backend.onrender.com/api/tieup/pending/${loggedInUserId}`
+          `/api/tieup/pending/${loggedInUserId}`
         );
         console.log(response);
         if (response.data.success) {
@@ -66,15 +62,12 @@ const Tieups = ({ loggedInUserId, onTieupsCountChange }) => {
 
   const handleAcceptRequest = async (requestId, senderid) => {
     try {
-      const response = await axios.post(
-        "https://edulink-backend.onrender.com/api/tieup/respond",
-        {
-          requestId,
-          senderid,
-          accepted: true,
-          token,
-        }
-      );
+      const response = await axios.post("/api/tieup/respond", {
+        requestId,
+        senderid,
+        accepted: true,
+        token,
+      });
       console.log(requestId);
 
       if (response.data.success) {
@@ -95,15 +88,12 @@ const Tieups = ({ loggedInUserId, onTieupsCountChange }) => {
 
   const handleRejectRequest = async (requestId, senderid) => {
     try {
-      const response = await axios.post(
-        "https://edulink-backend.onrender.com/api/tieup/respond",
-        {
-          requestId,
-          senderid,
-          accepted: false,
-          token,
-        }
-      );
+      const response = await axios.post("/api/tieup/respond", {
+        requestId,
+        senderid,
+        accepted: false,
+        token,
+      });
 
       if (response.data.success) {
         console.log("Tie-up request rejected");

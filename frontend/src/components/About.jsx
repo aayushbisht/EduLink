@@ -30,19 +30,13 @@ function About() {
       // const token = localStorage.getItem("companytoken");
       const token = companyId || localStorage.getItem("companytoken");
 
-      const response = await axios.post(
-        "https://edulink-backend.onrender.com/api/company/getcompanydetail",
-        {
-          token,
-        }
-      );
+      const response = await axios.post("/api/company/getcompanydetail", {
+        token,
+      });
       const companyData = response.data.data;
       setData(companyData);
       console.log(companyData);
-      const data = await axios.post(
-        "https://edulink-backend.onrender.com/api/company/findcompany",
-        { token }
-      );
+      const data = await axios.post("/api/company/findcompany", { token });
       const companyNam = data.data.data;
       console.log(data);
       setCompany(companyNam);
@@ -213,7 +207,7 @@ function About() {
                     <div className="modal-content">
                       <div className="modal-header">
                         <h5 className="modal-title" id="exampleModalLongTitle">
-                          Welcome to the EduLink
+                          Welcome to EduLink
                         </h5>
                         <button
                           type="button"

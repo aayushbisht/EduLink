@@ -21,9 +21,7 @@ const CollegeList = () => {
 
   const getCollegeData = async () => {
     try {
-      const response = await axios.post(
-        "https://edulink-backend.onrender.com/api/company/getcollegedata"
-      );
+      const response = await axios.post("/api/company/getcollegedata");
       setCollegeDataList(response.data.data);
     } catch (error) {
       console.error(error);
@@ -77,23 +75,24 @@ const CollegeList = () => {
               </a>
             </div>
           </div>
-          
-          {filteredCompanyData.length > 0 ? filteredCompanyData.map((collegeData) => (
-            <CollegeCard
-              key={collegeData._id}
-              collegeData={collegeData}
-              loggedInUserId={localStorage.getItem("companytoken")}
-              handleClick={() => handleCardClick(collegeData)}
-            />
-          )):
-          (
-            <div className="text-center">
-            <FaExclamationCircle size={30} color="#ff6347" />
-            <p className="card-text fs-5 fw-bold mb-0 mt-2">No College Found!</p>
-          </div>
-          )
 
-          }
+          {filteredCompanyData.length > 0 ? (
+            filteredCompanyData.map((collegeData) => (
+              <CollegeCard
+                key={collegeData._id}
+                collegeData={collegeData}
+                loggedInUserId={localStorage.getItem("companytoken")}
+                handleClick={() => handleCardClick(collegeData)}
+              />
+            ))
+          ) : (
+            <div className="text-center">
+              <FaExclamationCircle size={30} color="#ff6347" />
+              <p className="card-text fs-5 fw-bold mb-0 mt-2">
+                No College Found!
+              </p>
+            </div>
+          )}
         </div>
         <div className="col-md-6">
           {selectedCollege ? (

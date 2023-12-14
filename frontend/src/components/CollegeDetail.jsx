@@ -24,10 +24,7 @@ const CollegeDetail = (props) => {
       const values = { token, ...formData };
       console.log(values);
       props.setModal(false);
-      const response = await axios.post(
-        "https://edulink-backend.onrender.com/api/college/savedetails",
-        values
-      );
+      const response = await axios.post("/api/college/savedetails", values);
       if (response.data.success) {
         toast.success(response.data.message);
         props.setModal(false);

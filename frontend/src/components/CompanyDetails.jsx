@@ -25,10 +25,7 @@ const CompanyDetails = (props) => {
       const values = { token, ...formData };
       console.log(values);
       props.setModal(false);
-      const response = await axios.post(
-        "https://edulink-backend.onrender.com/api/company/savedetails",
-        values
-      );
+      const response = await axios.post("/api/company/savedetails", values);
       // console.log(response.data.message);
       if (response.data.success) {
         toast.success(response.data.message);

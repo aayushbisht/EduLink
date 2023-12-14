@@ -13,7 +13,7 @@ const CompanyEmailVerify = () => {
   useEffect(() => {
     const verifyEmailUrl = async () => {
       try {
-        const url = `https://edulink-backend.onrender.com/api/company/${param.id}/verify/${param.token}`;
+        const url = `/api/company/${param.id}/verify/${param.token}`;
         const { data } = await axios.get(url);
         console.log("this is");
         console.log(data);

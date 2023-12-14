@@ -31,7 +31,7 @@ const collegeSchema = new mongoose.Schema({
   },
   verified:{
     type: Boolean,
-    default : true,
+    default : false,
   },
   avatar:
         {

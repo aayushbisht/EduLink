@@ -19,9 +19,7 @@ const CompanyList = () => {
 
   const getCompanyData = async () => {
     try {
-      const response = await axios.post(
-        "https://edulink-backend.onrender.com/api/college/getcompanydata"
-      );
+      const response = await axios.post("/api/college/getcompanydata");
       setCompanyDataList(response.data.data);
     } catch (error) {
       console.error(error);
@@ -75,23 +73,23 @@ const CompanyList = () => {
             </div>
           </div>
 
-          { filteredCompanyData.length>0 ? filteredCompanyData.map((companyData) => (
-            <CompanyCard
-              key={companyData._id}
-              companyData={companyData}
-              loggedInUserId={localStorage.getItem("collegetoken")}
-              handleClick={() => handleCardClick(companyData)}
-            />
-          ))
-          :(
-            <div className="text-center" style={{ height: '100px' }}>
-  <FaExclamationCircle size={30} color="#ff6347" />
-  <p className="card-text fs-5 fw-bold mb-0 mt-2">No Company Found!</p>
-</div>
-
-          )
-        
-        }
+          {filteredCompanyData.length > 0 ? (
+            filteredCompanyData.map((companyData) => (
+              <CompanyCard
+                key={companyData._id}
+                companyData={companyData}
+                loggedInUserId={localStorage.getItem("collegetoken")}
+                handleClick={() => handleCardClick(companyData)}
+              />
+            ))
+          ) : (
+            <div className="text-center" style={{ height: "100px" }}>
+              <FaExclamationCircle size={30} color="#ff6347" />
+              <p className="card-text fs-5 fw-bold mb-0 mt-2">
+                No Company Found!
+              </p>
+            </div>
+          )}
         </div>
         <div className="col-md-6">
           {selectedCompany ? (

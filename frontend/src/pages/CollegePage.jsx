@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Toaster } from 'react-hot-toast';
 import CollegeDetail from '../components/CollegeDetail';
 import NewLoader from '../Loader/NewLoader';
+import bg1 from '../animations/bg1.png'; 
 
 const CollegePage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -16,7 +17,7 @@ const CollegePage = () => {
     try {
       const token = localStorage.getItem("collegetoken");
       const data = await axios.post(
-        "https://edulink-backend.onrender.com/api/college/findcollege",
+        "/api/college/findcollege",
         { token }
       );
       const collegeData = data.data.data;
@@ -37,7 +38,7 @@ const CollegePage = () => {
   const handleTieupsCountChange = () => {
     axios
       .get(
-        `https://edulink-backend.onrender.com/api/tieup/pending/${localStorage.getItem(
+        `/api/tieup/pending/${localStorage.getItem(
           "collegetoken"
         )}`
       )
@@ -67,12 +68,11 @@ const CollegePage = () => {
           <Toaster />
           <div className="container-fluid p-0 position-relative">
             {showModal ? (
-              <div className="modal fade show" style={{ display: 'block' }}>
-                <div className="modal-dialog modal-dialog-centered" role="document">
+          <div className="modal fade show" style={{ display: "block",backgroundImage:  `url(${bg1})`, backgroundSize:"100% 100%", backgroundRepeat: "no-repeat",backdropFilter: "blur(5px)"  }}>                <div className="modal-dialog modal-dialog-centered" role="document">
                   <div className="modal-content">
                     <div className="modal-header" style={{ margin: "0 auto" }}>
                       <h5 className="modal-title" id="exampleModalLongTitle" style={{ margin: "0 auto" }}>
-                        Welcome to the EduLink
+                        Welcome to EduLink
                       </h5>
                     </div>
                     <div className="modal-body">
@@ -93,7 +93,7 @@ const CollegePage = () => {
                   />
                 </div>
 
-                <div className="profile-box" style={{ position: "absolute", transform: "translate(250%, -33%)", zIndex: '999' }}>
+                <div className="profile-box" style={{ position: "absolute", transform: "translate(110%, -33%)", zIndex: '999', width:"250px" }}>
                   <img src={college.avatar && college.avatar.url ? college.avatar.url : "./assets/images/bg1.png"} alt="Profile Picture" className="img-fluid" style={{ width: "130px", height: "130px" }} />
                   <h2>{college.collegeName}</h2>
                   <p>{college.collegeType}</p>

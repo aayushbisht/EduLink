@@ -16,7 +16,6 @@
   }
   
   .carousel {
-    white-space: nowrap;
     overflow-x: auto;
     display: flex;
     gap: 20px;
@@ -33,8 +32,9 @@
     min-width: 300px; /* Adjust the card width as needed */
     border: 1px solid #ccc;
     padding: 10px;
+    overflow:auto;
   }
-
+  
   .card2 {
     min-width: 300px; /* Adjust the card width as needed */
     padding: 10px;
@@ -47,5 +47,10 @@
   
   .card-text1 {
     font-size: 14px;
+    word-wrap: break-word; /* Allow long words to break and wrap onto the next line */
+    overflow-wrap: break-word; /* Allow words to break and wrap onto the next line */
+    display: flex;
+    flex-direction: column; /* or row, depending on your layout */
   }
+  
   

@@ -13,10 +13,9 @@ const EmailVerify = () => {
   useEffect(() => {
     const verifyEmailUrl = async () => {
       try {
-        const url = `https://edulink-backend.onrender.com/api/college/${param.id}/verify/${param.token}`;
+        const url = `/api/college/${param.id}/verify/${param.token}`;
         const { data } = await axios.get(url);
         setValidUrl(true);
-
       } catch (error) {
         console.log(error);
         setValidUrl(false);
@@ -24,19 +23,17 @@ const EmailVerify = () => {
     };
 
     verifyEmailUrl();
-
   }, [param, navigate]);
 
   return (
     <Fragment>
-      
-        <div className={styles.container}>
-          <img src={success} alt="success_img" className={styles.success_img} />
-          <h1>College Email verified successfully</h1>
-          <Link to="/collegelogin">
-            <button className={styles.green_btn}>Login</button>
-          </Link>
-        </div>
+      <div className={styles.container}>
+        <img src={success} alt="success_img" className={styles.success_img} />
+        <h1>College Email verified successfully</h1>
+        <Link to="/collegelogin">
+          <button className={styles.green_btn}>Login</button>
+        </Link>
+      </div>
     </Fragment>
   );
 };

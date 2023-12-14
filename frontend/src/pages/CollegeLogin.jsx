@@ -26,10 +26,7 @@ const CollegeLogin = () => {
     e.preventDefault();
     try {
       const values = { email, password };
-      const response = await axios.post(
-        "https://edulink-backend.onrender.com/api/college/login",
-        values
-      );
+      const response = await axios.post("/api/college/login", values);
       if (response.data.success) {
         toast.success(response.data.message);
         localStorage.setItem("collegetoken", response.data.data);
@@ -112,7 +109,9 @@ const CollegeLogin = () => {
 
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div></div>
-                    <Link to="/collegereset" className="text-primary">Forgot password?</Link>
+                    <Link to="/collegereset" className="text-primary">
+                      Forgot password?
+                    </Link>
                   </div>
                   <Redirection type={"company"} />
 
