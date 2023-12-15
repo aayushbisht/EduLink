@@ -1,8 +1,10 @@
+// server.js
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+const {Server} = require('socket.io');
 require("dotenv").config();
-const { Server } = require('socket.io')
 const dbConfig = require("./config/db");
 app.use(express.json({ limit: "10mb" }));
 const fileUpload = require("express-fileupload");
@@ -12,6 +14,14 @@ app.use(
   })
 );
 const PORT = process.env.PORT || 5000;
+const http = require("http");
+const server = http.createServer(app);
+const io = require("socket.io")(server,{
+  pingTimeout: 60000,
+  cors : {
+    origin: "https://edulink2023.netlify.app",
+  },
+})
 const collegeRoute = require("./routes/collegeRoute");
 const companyRoute = require("./routes/companyRoute");
 const chatRoute = require("./routes/chatRoute");
@@ -30,16 +40,11 @@ app.use("/api/college", collegeRoute);
 app.use("/api/company", companyRoute);
 app.use("/api/chat", chatRoute);
 app.use("/api/tieup", tieupRoute);
-
-const server = app.listen(
-    PORT,
-    console.log("Server running")
-  );
-
-  const io = new Server(server, {
+server.listen(PORT, () => console.log("Server running");
+const io = new Server(server, {
     cors: {
-        origin: "*"
-    }
+        origin: "*"
+    }
 })
 
 const userSockets = {};
@@ -48,10 +53,14 @@ io.on("connection", async (socket) => {
 
   socket.on("setUser", async (userId) => {
     userSockets[userId] = socket;
+
+    // Fetch the chat history for the user from the database
     try {
       const chatHistory = await ChatMessage.find({
         $or: [{ loggedInUserId: userId }, { userId: userId }],
       }).sort({ createdAt: 1 });
+
+      // Send the stored chat history to the connected user
       socket.emit("initialChatHistory", chatHistory);
     } catch (error) {
       console.error(error);
@@ -67,11 +76,11 @@ io.on("connection", async (socket) => {
     });
     await newMessage.save();
 
-    socket.emit("chatMessage", newMessage); 
+    socket.emit("chatMessage", newMessage); // Emit the new message to the sender's socket
 
     const recipientSocket = userSockets[data.userId];
     if (recipientSocket) {
-      recipientSocket.emit("chatMessage", newMessage); 
+      recipientSocket.emit("chatMessage", newMessage); // Emit the new message to the recipient's socket
     }
   });
 
@@ -82,6 +91,7 @@ io.on("connection", async (socket) => {
         delete userSockets[userId];
         break;
       }
-    }
-  });
+    }
+  });
 });
+
