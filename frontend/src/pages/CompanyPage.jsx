@@ -34,7 +34,7 @@ const CompanyPage = () => {
   };
 
   const handleTieupsCountChange = () => {
-    axios.get(`/api/tieup/pending/${localStorage.getItem('companytoken')}`)
+    axios.get(`https://edulink-backend.onrender.com/api/tieup/pending/${localStorage.getItem('companytoken')}`)
       .then(response => setTieupsCount(response.data.pendingRequests.length))
       .catch(error => console.error('Error fetching pending requests count:', error));
   };
