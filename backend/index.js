@@ -1,8 +1,8 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 require("dotenv").config();
+const { Server } = require('socket.io')
 const dbConfig = require("./config/db");
 app.use(express.json({ limit: "10mb" }));
 const fileUpload = require("express-fileupload");
@@ -33,22 +33,14 @@ app.use("/api/tieup", tieupRoute);
 
 const server = app.listen(
     PORT,
-    console.log("Server running")
+    console.log(Server running on PORT ${PORT}...)
   );
 
-// const io = require("socket.io")(server,{
-//     pingTimeout: 60000,
-//     cors : {
-//       origin: "*",
-//     },
-//   })
-const io = require("socket.io")(server, {
-  pingTimeout: 60000,
-  cors: {
-    origin: ["https://edulink2023.netlify.app/collegepage", "https://edulink2023.netlify.app/companypage"],
-  },
-});
-
+  const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
+})
 
 const userSockets = {};
 io.on("connection", async (socket) => {
@@ -56,14 +48,10 @@ io.on("connection", async (socket) => {
 
   socket.on("setUser", async (userId) => {
     userSockets[userId] = socket;
-
-    // Fetch the chat history for the user from the database
     try {
       const chatHistory = await ChatMessage.find({
         $or: [{ loggedInUserId: userId }, { userId: userId }],
       }).sort({ createdAt: 1 });
-
-      // Send the stored chat history to the connected user
       socket.emit("initialChatHistory", chatHistory);
     } catch (error) {
       console.error(error);
@@ -79,11 +67,11 @@ io.on("connection", async (socket) => {
     });
     await newMessage.save();
 
-    socket.emit("chatMessage", newMessage); // Emit the new message to the sender's socket
+    socket.emit("chatMessage", newMessage); 
 
     const recipientSocket = userSockets[data.userId];
     if (recipientSocket) {
-      recipientSocket.emit("chatMessage", newMessage); // Emit the new message to the recipient's socket
+      recipientSocket.emit("chatMessage", newMessage); 
     }
   });
 
