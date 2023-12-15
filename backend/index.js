@@ -16,12 +16,6 @@ app.use(
 const PORT = process.env.PORT || 5000;
 const http = require("http");
 const server = http.createServer(app);
-const io = require("socket.io")(server,{
-  pingTimeout: 60000,
-  cors : {
-    origin: "https://edulink2023.netlify.app",
-  },
-})
 const collegeRoute = require("./routes/collegeRoute");
 const companyRoute = require("./routes/companyRoute");
 const chatRoute = require("./routes/chatRoute");
