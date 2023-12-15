@@ -129,7 +129,7 @@ const CollegeRegister = () => {
                         "0.5rem" /* Add some spacing at the bottom */,
                     }}
                   >
-                    College Registration
+                    College Registraton
                   </h2>
 
                   <div className="form-group mb-4">
