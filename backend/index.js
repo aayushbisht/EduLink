@@ -36,12 +36,19 @@ const server = app.listen(
     console.log("Server running")
   );
 
-const io = require("socket.io")(server,{
-    pingTimeout: 60000,
-    cors : {
-      origin: "*",
-    },
-  })
+// const io = require("socket.io")(server,{
+//     pingTimeout: 60000,
+//     cors : {
+//       origin: "*",
+//     },
+//   })
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: ["https://edulink2023.netlify.app/collegepage", "https://edulink2023.netlify.app/companypage"],
+  },
+});
+
 
 const userSockets = {};
 io.on("connection", async (socket) => {
