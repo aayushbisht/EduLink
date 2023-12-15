@@ -40,7 +40,7 @@ app.use("/api/college", collegeRoute);
 app.use("/api/company", companyRoute);
 app.use("/api/chat", chatRoute);
 app.use("/api/tieup", tieupRoute);
-server.listen(PORT, () => console.log("Server running");
+server.listen(PORT, () => console.log("Server running"));
 const io = new Server(server, {
     cors: {
         origin: "*"
