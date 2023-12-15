@@ -8,20 +8,39 @@ const Chat = ({ userType, loggedInUserId, userId, socket }) => {
     setMessage(event.target.value);
   };
 
-  const handleSendMessage = () => {
+  // const handleSendMessage = () => {
+  //   if (!isSending && message.trim() !== '') {
+  //     setIsSending(true);
+  //     socket.emit('chatMessage', {
+  //       userType,
+  //       loggedInUserId,
+  //       userId,
+  //       message,
+  //     });
+  //     setMessage('');
+  //     setIsSending(false);
+  //   }
+  // };
+const handleSendMessage = () => {
     if (!isSending && message.trim() !== '') {
       setIsSending(true);
-      socket.emit('chatMessage', {
-        userType,
-        loggedInUserId,
-        userId,
-        message,
-      });
-      setMessage('');
-      setIsSending(false);
-    }
-  };
-
+  
+      try {
+        socket.emit('chatMessage', {
+          userType,
+          loggedInUserId,
+          userId,
+          message,
+        });
+  
+        setMessage('');
+      } catch (error) {
+        console.error('Error sending chat message:', error);
+      } finally {
+        setIsSending(false);
+      }
+    }
+  };
   useEffect(() => {
     if (socket) {
       socket.emit('setUser', loggedInUserId);
