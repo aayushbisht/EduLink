@@ -33,7 +33,7 @@ app.use("/api/tieup", tieupRoute);
 
 const server = app.listen(
     PORT,
-    console.log(Server running on PORT ${PORT}...)
+    console.log("Server running")
   );
 
   const io = new Server(server, {
