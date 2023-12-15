@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -13,14 +12,6 @@ app.use(
   })
 );
 const PORT = process.env.PORT || 5000;
-const http = require("http");
-const server = http.createServer(app);
-const io = require("socket.io")(server,{
-  pingTimeout: 60000,
-  cors : {
-    origin: "https://edulink2023.netlify.app",
-  },
-})
 const collegeRoute = require("./routes/collegeRoute");
 const companyRoute = require("./routes/companyRoute");
 const chatRoute = require("./routes/chatRoute");
@@ -39,6 +30,18 @@ app.use("/api/college", collegeRoute);
 app.use("/api/company", companyRoute);
 app.use("/api/chat", chatRoute);
 app.use("/api/tieup", tieupRoute);
+
+const server = app.listen(
+    PORT,
+    console.log(Server running on PORT ${PORT}....yellow.bold)
+  );
+
+const io = require("socket.io")(server,{
+    pingTimeout: 60000,
+    cors : {
+      origin: "https://edulink2023.netlify.app",
+    },
+  })
 
 const userSockets = {};
 io.on("connection", async (socket) => {
@@ -84,8 +87,6 @@ io.on("connection", async (socket) => {
         delete userSockets[userId];
         break;
       }
-    }
-  });
+    }
+  });
 });
-
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
