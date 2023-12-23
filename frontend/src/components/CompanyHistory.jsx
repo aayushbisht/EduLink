@@ -28,7 +28,7 @@ const CompanyHistory = ({ loggedInUserId }) => {
 
   useEffect(() => {
     getCompanyData();
-    const newSocket = io();
+    const newSocket = io.connect("https://yoga-backend-4i5c.onrender.com");
     setSocket(newSocket);
     newSocket.emit("setUser", loggedInUserId);
 
