@@ -33,7 +33,7 @@ app.use('/api/company', companyRoute);
 app.use('/api/chat', chatRoute);
 app.use('/api/tieup', tieupRoute);
 app.use('/api/setUser', chatRoute);
-const server = app.listen(PORT, () => console.log(Server running on port ${PORT}));
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 const io = new Server(server, {
     cors: {
       origin: "*",
