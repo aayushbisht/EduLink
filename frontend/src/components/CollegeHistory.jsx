@@ -27,7 +27,7 @@ function CollegeHistory({ loggedInUserId }) {
   };
   useEffect(() => {
     getCollegeData();
-    const newSocket = io.connect("https://yoga-backend-4i5c.onrender.com");
+    const newSocket = io.connect("https://edulink-backend.onrender.com");
     setSocket(newSocket);
 
     newSocket.emit("setUser", loggedInUserId);
